@@ -2,7 +2,7 @@
 import * as THREE from "three";
 import { LOTS, SITE, WORLD, lotArchetype, type Kind, type Lot, type PlanRoom } from "./community";
 import { loadTex } from "./walk-interior";
-import { hidePano, showPano } from "./walk-pano";
+import { hidePano, showPano, syncPano } from "./walk-pano";
 import { panoKeyFor, panoRooms, type PanoRoom } from "./panos";
 import { exteriorFor } from "./tours";
 
@@ -283,6 +283,7 @@ export function mountWalk(canvas: HTMLCanvasElement): WalkApi {
 		walkingTo = false;
 		world.visible = false;
 		showPano(scene, key);
+		syncPano(pos.x, pos.y, pos.z);
 		applyFilter();
 		selectLot(n);
 		notify();
@@ -297,6 +298,7 @@ export function mountWalk(canvas: HTMLCanvasElement): WalkApi {
 		pos.set(lot.x, 1.65, lot.z);
 		yaw = 0;
 		pitch = 0;
+		syncPano(pos.x, pos.y, pos.z);
 		activeRoom = id;
 		notify();
 	}
@@ -481,6 +483,7 @@ export function mountWalk(canvas: HTMLCanvasElement): WalkApi {
 			pitch = THREE.MathUtils.clamp(pitch - analogZ * 1.4 * dt, -1.35, 1.35);
 			speed = 0;
 			camera.position.copy(pos);
+			syncPano(pos.x, pos.y, pos.z);
 			look.copy(pos).addScaledVector(fwd, 6);
 			look.y += Math.sin(pitch) * 6;
 			camera.lookAt(look);
