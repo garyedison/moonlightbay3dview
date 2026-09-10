@@ -1,0 +1,89 @@
+@import "tailwindcss";
+
+@theme {
+  --color-salt: #f3eee4;
+  --color-sand: #d6c4a5;
+  --color-glass: #8aada4;
+  --color-lagoon: #2c5854;
+  --color-lagoon-deep: #1e3f3c;
+  --color-teak: #7a5a38;
+  --color-ink: #1c211f;
+  --color-muted: #6b6458;
+  --color-paper: #faf7f1;
+  --color-line: color-mix(in oklab, var(--color-ink) 12%, transparent);
+  --color-line-strong: color-mix(in oklab, var(--color-ink) 22%, transparent);
+  --color-bg: var(--color-paper);
+  --color-fg: var(--color-ink);
+  --color-primary: var(--color-lagoon);
+  --color-surface: #fffdf8;
+  --color-accent: var(--color-lagoon);
+
+  --font-display: "Cormorant Garamond", "Times New Roman", serif;
+  --font-sans: "Outfit", "Segoe UI", system-ui, sans-serif;
+
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+
+  --shadow-border:
+    0 0 0 1px rgba(28, 33, 31, 0.06),
+    0 1px 2px -1px rgba(28, 33, 31, 0.06),
+    0 8px 24px -12px rgba(28, 33, 31, 0.12);
+
+  --aspect-wide: 16 / 9;
+  --aspect-photo: 16 / 10;
+  --aspect-still: 4 / 3;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--color-paper);
+    color: var(--color-ink);
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    text-wrap: balance;
+    letter-spacing: -0.02em;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+
+  img {
+    outline: 1px solid rgba(28, 33, 31, 0.08);
+    outline-offset: -1px;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-lagoon);
+    outline-offset: 3px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
