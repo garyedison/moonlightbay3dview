@@ -6,6 +6,7 @@ import {
   ARCH,
   FEATURED_LOTS,
   LOTS,
+  SITE,
   WORLD,
   ZONE_LABEL,
   counts,
@@ -66,10 +67,10 @@ export function MapStudio() {
         <p className="text-xs tracking-[0.2em] text-teak uppercase">Built-out plat</p>
         <h1 className="mt-2 font-display text-4xl sm:text-5xl">Site map with a home on every lot.</h1>
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
-          {stats.total} houses — {stats.steel} steel container, {stats.wood} wood — seeded across a
-          schematic of Moonlight Bay de Consejo. Click a lot to walk it in 3D. Gold numbers are the
-          featured beach, canal, gate, park, and street pins. Not a survey; confirm lots with the
-          developer.
+          {stats.total} houses — {stats.steel} steel container, {stats.wood} wood — on the Consejo plat.
+          Canal runs north–south on the west bank (mangrove beyond), then a south arm into Chetumal Bay
+          on the east. Click a lot to walk it in 3D and open the kitchen, living room, and bedrooms.
+          Gold numbers are featured beach, canal, gate, park, and street pins. Not a survey.
         </p>
 
         <div className="mt-6 flex flex-wrap gap-2">
@@ -110,18 +111,28 @@ export function MapStudio() {
         </div>
 
         <div className="mt-6 overflow-hidden rounded-xl bg-surface shadow-border">
-          <svg viewBox={`${-pad} ${-18} ${w} ${d}`} className="h-auto w-full bg-salt">
-            <rect x={-pad} y={-18} width={w} height={20} fill="#5e9aa8" />
-            <text x={WORLD.width / 2} y={-6} textAnchor="middle" fill="#1c211f" fontSize="5" fontFamily="Georgia, serif">
+          <svg viewBox={`${-pad} ${-8} ${w} ${d}`} className="h-auto w-full bg-salt">
+            <rect x={SITE.bayX} y={-8} width={SITE.bayW} height={WORLD.depth + 16} fill="#4e8f9c" />
+            <text
+              x={SITE.bayX + 18}
+              y={WORLD.depth / 2}
+              fill="#faf7f1"
+              fontSize="5"
+              fontFamily="Georgia, serif"
+              transform={`rotate(90 ${SITE.bayX + 18} ${WORLD.depth / 2})`}
+            >
               CHETUMAL BAY
             </text>
-            <rect x={4.2 * 8.2} y={4 * 11.4} width="12" height="72" fill="#4f8f96" />
-            <rect x={9.0 * 8.2} y={4 * 11.4} width="12" height="72" fill="#4f8f96" />
-            <rect x={4.2 * 8.2} y={9.2 * 11.4} width="52" height="16" fill="#4f8f96" />
-            <rect x={6.2 * 8.2} y={12 * 11.4} width="22" height="16" fill="#7a9a6a" />
-            <rect x={17.6 * 8.2} y={6 * 11.4} width="22" height="16" fill="#7a9a6a" />
-            <rect x={13.6 * 8.2} y={12 * 11.4} width="22" height="16" fill="#7a9a6a" />
-            <rect x="2" y="8" width="10" height={WORLD.depth} fill="#b7a585" />
+            <rect x={SITE.mangroveX - 4} y={-2} width={SITE.mangroveW + 2} height={WORLD.depth + 4} fill="#3a5536" />
+            <rect x={SITE.canalX - SITE.canalW / 2} y={4} width={SITE.canalW} height={WORLD.depth - 10} fill="#3e7a86" />
+            <rect x={SITE.canalX} y={WORLD.depth - 10} width={WORLD.width * 0.7} height="16" fill="#3e7a86" />
+            <text x={SITE.canalX} y={WORLD.depth * 0.4} fill="#faf7f1" fontSize="4" textAnchor="middle" fontFamily="Georgia, serif">
+              CANAL
+            </text>
+            <rect x={8 * 8.2} y={7 * 11.4} width="16" height="14" fill="#7a9a6a" />
+            <rect x={13.5 * 8.2} y={4 * 11.4} width="14" height="14" fill="#7a9a6a" />
+            <rect x={13 * 8.2} y={11 * 11.4} width="28" height="16" fill="#7a9a6a" />
+            <rect x={4.2 * 8.2} y="8" width="6.5" height={WORLD.depth * 0.72} fill="#b7a585" />
             {visible.map((lot) => {
               const arch = lotArchetype(lot);
               const featured = FEATURED_LOTS.has(lot.n);

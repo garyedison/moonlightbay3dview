@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { ARCH, LOTS, LOT_BY_N, WORLD, ZONE_LABEL, counts, lotArchetype, randomLotN } from "@/lib/community";
 import { downloadCommunityPdf, downloadCommunitySvg } from "@/lib/community-pdf";
 import { cn } from "@/lib/utils";
+import { exteriorFor, tourFor, photoForRoom, tourRoom } from "@/lib/tours";
 import type { Kind } from "@/lib/community";
 import type { WalkApi, WalkMode } from "@/lib/walk-engine";
 
@@ -21,6 +22,7 @@ export function WalkStudio() {
   const [query, setQuery] = useState("");
   const [floor, setFloor] = useState<1 | 2>(1);
   const [rooms, setRooms] = useState<{ id: string; name: string }[]>([]);
+  const [activeRoom, setActiveRoom] = useState<string | null>(null);
   const [openCard, setOpenCard] = useState(true);
   const [copied, setCopied] = useState(false);
 
@@ -38,11 +40,15 @@ export function WalkStudio() {
         setMode(api?.getMode() ?? "dollhouse");
         setFloor(api?.getFloor() ?? 1);
         setRooms(api?.getRooms() ?? []);
+        setActiveRoom(api?.getActiveRoom() ?? null);
       });
       setReady(true);
       const params = new URLSearchParams(window.location.search);
       const n = Number(params.get("lot"));
-      if (Number.isFinite(n) && LOT_BY_N.has(n)) {
+      if (params.get("tour") === "1") {
+        setStarted(true);
+        api.playTour();
+      } else if (Number.isFinite(n) && LOT_BY_N.has(n)) {
         setStarted(true);
         setSelected(n);
         api.enterLot(n);
@@ -96,15 +102,32 @@ export function WalkStudio() {
         <div className="absolute inset-0 z-20 flex items-end bg-ink/45 p-4 sm:items-center sm:justify-center sm:p-8">
           <div className="max-w-lg rounded-xl bg-paper p-6 text-ink shadow-border">
             <p className="text-xs tracking-[0.2em] text-teak uppercase">Moonlight Bay 3D view</p>
-            <h1 className="mt-2 font-display text-4xl font-medium">Every lot has a house. Walk the plat.</h1>
+            <h1 className="mt-2 font-display text-4xl font-medium">Walk the community. Look inside 360°.</h1>
+            <img
+              src="/site/peninsula-aerial.jpg"
+              alt="Beach cottages and mangrove canal at Moonlight Bay"
+              className="mt-4 h-36 w-full rounded-lg object-cover"
+            />
             <p className="mt-3 text-sm leading-relaxed text-muted">
-              {stats.total} homes — {stats.steel} steel container and {stats.wood} wood — mixed across the
-              schematic plat. Dollhouse the whole site, walk the roads, step inside a model, jump room to
-              room. Download the PDF map. Not a survey and not a captured Matterport — a planning model.
+              Play the auto flythrough — gate, canal, beach, then kitchen and bedrooms — or click any
+              house and drag to look around. This is a planning 3D tour with factory room photos, not a
+              captured Matterport of 260 unique shells.
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
               <Button type="button" onClick={() => setStarted(true)} disabled={!ready} className="min-h-11">
                 {ready ? "Start walking" : "Loading 3D…"}
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                disabled={!ready}
+                className="min-h-11"
+                onClick={() => {
+                  setStarted(true);
+                  apiRef.current?.playTour();
+                }}
+              >
+                Play community tour
               </Button>
               <Button type="button" variant="outline" onClick={downloadCommunityPdf} className="min-h-11">
                 <Download className="size-4" />
@@ -118,8 +141,7 @@ export function WalkStudio() {
               </Button>
             </div>
             <p className="mt-3 text-xs text-muted">
-              Drag to look. Scroll to zoom the dollhouse. WASD to walk. Click a house, then Enter home.
-              Gold dots inside jump you room to room. Share path: /3d or /moonlightbay3dview
+              Inside a home: drag to look 360°, A/D to turn, room chips to jump. Escape back to the street.
             </p>
           </div>
         </div>
@@ -189,6 +211,35 @@ export function WalkStudio() {
                   <p className="mt-1 text-sm text-muted">
                     {arch.kind === "steel" ? "Container steel" : "Wood"} · {arch.size} · {arch.beds} · {arch.area}
                   </p>
+                  {(() => {
+                    const tour = tourFor(arch.id, lot.zone);
+                    const shown =
+                      mode === "inside"
+                        ? photoForRoom(activeRoom ?? "living", arch.id, lot.zone)
+                        : exteriorFor(lot.n, arch.id);
+                    const cap =
+                      mode === "inside"
+                        ? (tourRoom(activeRoom ?? "living", arch.id, lot.zone)?.caption ??
+                          "Same Caribbean Salt furniture kit in every house.")
+                        : lot.zone === "canal"
+                          ? "On dry land. Deck faces the west canal — 5 ft bank down to the water."
+                          : lot.zone === "beach"
+                            ? "East-facing Chetumal Bay. Same house, bigger terrace."
+                            : "Factory shell with the shared furniture kit.";
+                    return (
+                      <>
+                        <img
+                          src={shown}
+                          alt={mode === "inside" ? (activeRoom ?? "Room") : `Lot ${lot.n} exterior`}
+                          className="mt-3 h-32 w-full rounded-lg object-cover sm:h-40"
+                        />
+                        <p className="mt-1 text-xs leading-relaxed text-muted">{cap}</p>
+                        {mode === "inside" && (
+                          <p className="mt-1 text-xs text-teak">Drag to look 360°. A/D turns. Room chips jump.</p>
+                        )}
+                      </>
+                    );
+                  })()}
                   <div className="mt-3 flex flex-wrap gap-2">
                     {mode !== "inside" ? (
                       <Button type="button" size="sm" className="min-h-11" onClick={() => jump(lot.n)}>
@@ -210,6 +261,24 @@ export function WalkStudio() {
                       <Shuffle className="size-4" />
                       Random home
                     </Button>
+                    <Button type="button" size="sm" variant="outline" className="min-h-11" onClick={() => jump(103, false)}>
+                      Canal 103
+                    </Button>
+                    <Button type="button" size="sm" variant="outline" className="min-h-11" onClick={() => jump(196, false)}>
+                      Beach 196
+                    </Button>
+                    <Button type="button" size="sm" variant="outline" className="min-h-11" onClick={() => jump(330, false)}>
+                      Gate 330
+                    </Button>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      className="min-h-11"
+                      onClick={() => apiRef.current?.playTour()}
+                    >
+                      Play tour
+                    </Button>
                   </div>
                   {mode === "inside" && arch.stories === 2 && (
                     <div className="mt-3 flex gap-1">
@@ -227,19 +296,25 @@ export function WalkStudio() {
                       ))}
                     </div>
                   )}
-                  {mode === "inside" && rooms.length > 0 && (
-                    <div className="mt-3 flex flex-wrap gap-1">
-                      {rooms.map((r) => (
-                        <Button
+                  {mode === "inside" && lot && arch && (
+                    <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
+                      {(rooms.length ? rooms : tourFor(arch.id, lot.zone)).map((r) => (
+                        <button
                           key={r.id}
                           type="button"
-                          size="sm"
-                          variant="outline"
-                          className="h-9 rounded-full text-xs"
+                          className={cn(
+                            "min-w-[4.5rem] rounded-lg border border-line text-left",
+                            activeRoom === r.id && "ring-2 ring-lagoon",
+                          )}
                           onClick={() => apiRef.current?.goRoom(r.id)}
                         >
-                          {r.name}
-                        </Button>
+                          <img
+                            src={photoForRoom(r.id, arch.id, lot.zone)}
+                            alt=""
+                            className="h-12 w-full rounded-t-lg object-cover"
+                          />
+                          <span className="block px-1.5 py-1 text-[10px] leading-tight">{r.name}</span>
+                        </button>
                       ))}
                     </div>
                   )}
@@ -305,7 +380,15 @@ function Minimap({ selected, onPick }: { selected: number | null; onPick: (n: nu
   return (
     <svg viewBox={`0 0 ${WORLD.cols + 1} ${WORLD.rows}`} className="pointer-events-auto mt-1 h-auto w-full">
       <rect width={WORLD.cols + 1} height={WORLD.rows} fill="#d6c4a5" />
-      <rect x="0" y="0" width={WORLD.cols + 1} height="1.2" fill="#5e9aa8" />
+      <rect x="0" y="0" width="2.4" height={WORLD.rows} fill="#3a5536" />
+      <rect x="1.4" y="0.4" width="1.5" height={WORLD.rows - 1.2} fill="#3e7a86" />
+      <rect x={WORLD.cols - 3.2} y="0" width="4" height={WORLD.rows} fill="#4e8f9c" />
+      <text x="21.2" y="8" fill="#faf7f1" fontSize="0.9" transform="rotate(-90 21.2 8)">
+        BAY
+      </text>
+      <text x="1.7" y="8" fill="#faf7f1" fontSize="0.7" transform="rotate(-90 1.7 8)">
+        CANAL
+      </text>
       {LOTS.map((lot) => {
         const arch = ARCH[lot.arch];
         const c = lot.x / WORLD.colW;

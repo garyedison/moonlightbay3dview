@@ -223,9 +223,9 @@ export const ARCH: Record<string, Archetype> = {
   },
 };
 
-const STEEL_COLORS = [0x4a5560, 0x2c5854, 0x8aada4, 0xc45c3e, 0xd6c4a5, 0x3d4f4c];
-const WOOD_COLORS = [0x7a5a38, 0xf3eee4, 0xc4a574, 0x8aada4, 0x5c4033, 0xe8dcc8];
-const ROOFS = [0x3a3a3a, 0x4a4038, 0x5c6564, 0x2c241c];
+const STEEL_COLORS = [0x1fa6a0, 0x2b3038, 0x3d444c, 0xe7ece8, 0x4a5560, 0xc45c3e];
+const WOOD_COLORS = [0x8b5a32, 0xf3eee4, 0xc4a574, 0xd8d0c4, 0x5c4033, 0xe8dcc8];
+const ROOFS = [0xc5c8c4, 0xb8b3a8, 0x3a3a3a, 0x5c6564];
 
 const BEACH_POOL = ["wood-bay", "steel-villa", "wood-bay", "steel-villa", "wood-mid"];
 const CANAL_POOL = ["wood-mid", "steel-linear", "wood-park", "steel-villa", "wood-small"];
@@ -241,6 +241,25 @@ function pick<T>(rand: () => number, list: T[]) {
 const COL_W = 8.2;
 const ROW_D = 11.4;
 
+/**
+ * Real Consejo geography (from the July 2026 plat + drone gallery):
+ *   WEST  mangrove swamp → canal (N–S, then a south arm into the bay)
+ *   EAST  Chetumal Bay / beach peninsula
+ *   NORTH gated entrance
+ * Houses sit on dry land. Canal lots face west to the water; beach lots face east to the bay.
+ */
+export const SITE = {
+  colW: COL_W,
+  rowD: ROW_D,
+  canalX: 11.5,
+  canalW: 11,
+  mangroveX: 3.4,
+  mangroveW: 8,
+  bankX: 18.5,
+  bayX: 21 * COL_W,
+  bayW: 46,
+};
+
 type Cell = { c: number; r: number; zone: Zone; rot: number };
 
 function cells(): Cell[] {
@@ -252,34 +271,32 @@ function cells(): Cell[] {
   for (let r = 0; r < 16; r++) {
     mark(0, r);
     mark(1, r);
+    mark(2, r);
+    mark(21, r);
+    mark(22, r);
+    mark(23, r);
+    mark(24, r);
   }
-  for (let r = 4; r <= 9; r++) {
-    mark(4, r);
-    mark(5, r);
-    mark(9, r);
-    mark(10, r);
+  for (let c = 8; c <= 10; c++) {
+    mark(c, 7);
+    mark(c, 8);
   }
-  for (let c = 4; c <= 10; c++) {
-    mark(c, 9);
-    mark(c, 10);
+  for (let c = 14; c <= 15; c++) {
+    mark(c, 4);
+    mark(c, 5);
   }
-  for (let c = 6; c <= 8; c++) for (let r = 12; r <= 13; r++) mark(c, r);
-  for (let c = 18; c <= 20; c++) for (let r = 6; r <= 7; r++) mark(c, r);
-  for (let c = 14; c <= 16; c++) for (let r = 12; r <= 13; r++) mark(c, r);
-  for (let c = 20; c <= 23; c++) for (let r = 3; r <= 4; r++) mark(c, r);
 
   function zoneFor(c: number, r: number): { zone: Zone; rot: number } {
-    if (r === 1 && c >= 4 && c <= 24) return { zone: "beach", rot: 0 };
-    if ((c === 3 || c === 6 || c === 8 || c === 11) && r >= 4 && r <= 10) return { zone: "canal", rot: c < 7 ? Math.PI / 2 : -Math.PI / 2 };
-    if (r === 8 && c >= 6 && c <= 8) return { zone: "canal", rot: Math.PI };
-    if (c === 2 && r >= 2 && r <= 8) return { zone: "gate", rot: Math.PI / 2 };
-    if (r >= 11 && r <= 12 && c >= 17 && c <= 22) return { zone: "park", rot: 0 };
-    if (r >= 11 && c >= 21) return { zone: "street", rot: 0 };
+    if (c === 20) return { zone: "beach", rot: Math.PI / 2 };
+    if (c === 3) return { zone: "canal", rot: -Math.PI / 2 };
+    if (c === 4 && r >= 1 && r <= 8) return { zone: "gate", rot: -Math.PI / 2 };
+    if (r >= 11 && r <= 12 && c >= 12 && c <= 17) return { zone: "park", rot: 0 };
+    if (r >= 13 && c >= 12 && c <= 19) return { zone: "street", rot: 0 };
     return { zone: "interior", rot: r % 2 === 0 ? 0 : Math.PI };
   }
 
   for (let r = 1; r <= 15; r++) {
-    for (let c = 2; c <= 24; c++) {
+    for (let c = 3; c <= 20; c++) {
       if (skip.has(`${c},${r}`)) continue;
       const z = zoneFor(c, r);
       out.push({ c, r, zone: z.zone, rot: z.rot });
@@ -298,44 +315,53 @@ function poolFor(zone: Zone) {
 }
 
 const FEATURED: Record<number, { c: number; r: number; zone: Zone; rot: number; arch: string }> = {
-  196: { c: 12, r: 1, zone: "beach", rot: 0, arch: "wood-bay" },
-  197: { c: 13, r: 1, zone: "beach", rot: 0, arch: "wood-bay" },
-  198: { c: 14, r: 1, zone: "beach", rot: 0, arch: "steel-villa" },
-  199: { c: 15, r: 1, zone: "beach", rot: 0, arch: "wood-bay" },
-  103: { c: 3, r: 5, zone: "canal", rot: Math.PI / 2, arch: "wood-mid" },
-  104: { c: 3, r: 6, zone: "canal", rot: Math.PI / 2, arch: "steel-linear" },
-  105: { c: 3, r: 7, zone: "canal", rot: Math.PI / 2, arch: "wood-mid" },
-  106: { c: 3, r: 8, zone: "canal", rot: Math.PI / 2, arch: "wood-park" },
-  107: { c: 3, r: 9, zone: "canal", rot: Math.PI / 2, arch: "steel-villa" },
-  108: { c: 6, r: 5, zone: "canal", rot: -Math.PI / 2, arch: "wood-small" },
-  109: { c: 6, r: 6, zone: "canal", rot: -Math.PI / 2, arch: "steel-cube" },
-  110: { c: 6, r: 7, zone: "canal", rot: -Math.PI / 2, arch: "wood-mid" },
-  111: { c: 6, r: 8, zone: "canal", rot: -Math.PI / 2, arch: "steel-linear" },
-  112: { c: 8, r: 5, zone: "canal", rot: Math.PI / 2, arch: "wood-small" },
-  113: { c: 8, r: 6, zone: "canal", rot: Math.PI / 2, arch: "wood-studio" },
-  114: { c: 8, r: 7, zone: "canal", rot: Math.PI / 2, arch: "steel-linear" },
-  330: { c: 2, r: 2, zone: "gate", rot: Math.PI / 2, arch: "wood-small" },
-  315: { c: 2, r: 3, zone: "gate", rot: Math.PI / 2, arch: "steel-cube" },
-  314: { c: 2, r: 4, zone: "gate", rot: Math.PI / 2, arch: "wood-mid" },
-  169: { c: 2, r: 5, zone: "gate", rot: Math.PI / 2, arch: "steel-linear" },
-  168: { c: 2, r: 6, zone: "gate", rot: Math.PI / 2, arch: "wood-studio" },
-  167: { c: 2, r: 7, zone: "gate", rot: Math.PI / 2, arch: "wood-small" },
-  165: { c: 2, r: 8, zone: "gate", rot: Math.PI / 2, arch: "steel-cube" },
-  234: { c: 17, r: 11, zone: "park", rot: 0, arch: "wood-park" },
-  235: { c: 18, r: 11, zone: "park", rot: 0, arch: "wood-mid" },
-  236: { c: 19, r: 11, zone: "park", rot: 0, arch: "steel-linear" },
-  237: { c: 20, r: 11, zone: "park", rot: 0, arch: "wood-park" },
-  238: { c: 21, r: 11, zone: "park", rot: 0, arch: "wood-mid" },
-  239: { c: 22, r: 11, zone: "park", rot: 0, arch: "steel-linear" },
-  241: { c: 21, r: 12, zone: "street", rot: 0, arch: "wood-studio" },
-  252: { c: 21, r: 13, zone: "street", rot: 0, arch: "wood-small" },
-  253: { c: 22, r: 13, zone: "street", rot: 0, arch: "wood-small" },
-  254: { c: 23, r: 13, zone: "street", rot: 0, arch: "steel-cube" },
-  255: { c: 24, r: 13, zone: "street", rot: 0, arch: "wood-park" },
-  256: { c: 21, r: 14, zone: "street", rot: 0, arch: "steel-cube" },
-  257: { c: 22, r: 14, zone: "street", rot: 0, arch: "wood-studio" },
-  258: { c: 23, r: 14, zone: "street", rot: 0, arch: "wood-small" },
-  259: { c: 24, r: 14, zone: "street", rot: 0, arch: "steel-linear" },
+  196: { c: 20, r: 3, zone: "beach", rot: Math.PI / 2, arch: "wood-bay" },
+  197: { c: 20, r: 4, zone: "beach", rot: Math.PI / 2, arch: "wood-bay" },
+  198: { c: 20, r: 5, zone: "beach", rot: Math.PI / 2, arch: "steel-villa" },
+  199: { c: 20, r: 6, zone: "beach", rot: Math.PI / 2, arch: "wood-bay" },
+  200: { c: 20, r: 7, zone: "beach", rot: Math.PI / 2, arch: "steel-villa" },
+  201: { c: 20, r: 8, zone: "beach", rot: Math.PI / 2, arch: "wood-mid" },
+  202: { c: 20, r: 9, zone: "beach", rot: Math.PI / 2, arch: "wood-bay" },
+  203: { c: 20, r: 10, zone: "beach", rot: Math.PI / 2, arch: "steel-villa" },
+  204: { c: 20, r: 11, zone: "beach", rot: Math.PI / 2, arch: "wood-bay" },
+  205: { c: 20, r: 12, zone: "beach", rot: Math.PI / 2, arch: "wood-mid" },
+  206: { c: 20, r: 13, zone: "beach", rot: Math.PI / 2, arch: "steel-villa" },
+  207: { c: 20, r: 14, zone: "beach", rot: Math.PI / 2, arch: "wood-bay" },
+  208: { c: 20, r: 15, zone: "beach", rot: Math.PI / 2, arch: "steel-villa" },
+  103: { c: 3, r: 3, zone: "canal", rot: -Math.PI / 2, arch: "wood-mid" },
+  104: { c: 3, r: 4, zone: "canal", rot: -Math.PI / 2, arch: "steel-linear" },
+  105: { c: 3, r: 5, zone: "canal", rot: -Math.PI / 2, arch: "wood-mid" },
+  106: { c: 3, r: 6, zone: "canal", rot: -Math.PI / 2, arch: "wood-park" },
+  107: { c: 3, r: 7, zone: "canal", rot: -Math.PI / 2, arch: "steel-villa" },
+  108: { c: 3, r: 8, zone: "canal", rot: -Math.PI / 2, arch: "wood-small" },
+  109: { c: 3, r: 9, zone: "canal", rot: -Math.PI / 2, arch: "steel-cube" },
+  110: { c: 3, r: 10, zone: "canal", rot: -Math.PI / 2, arch: "wood-mid" },
+  111: { c: 3, r: 11, zone: "canal", rot: -Math.PI / 2, arch: "steel-linear" },
+  112: { c: 3, r: 12, zone: "canal", rot: -Math.PI / 2, arch: "wood-small" },
+  113: { c: 3, r: 13, zone: "canal", rot: -Math.PI / 2, arch: "wood-studio" },
+  114: { c: 3, r: 14, zone: "canal", rot: -Math.PI / 2, arch: "steel-linear" },
+  330: { c: 4, r: 1, zone: "gate", rot: -Math.PI / 2, arch: "wood-small" },
+  315: { c: 4, r: 2, zone: "gate", rot: -Math.PI / 2, arch: "steel-cube" },
+  314: { c: 4, r: 3, zone: "gate", rot: -Math.PI / 2, arch: "wood-mid" },
+  169: { c: 4, r: 4, zone: "gate", rot: -Math.PI / 2, arch: "steel-linear" },
+  168: { c: 4, r: 5, zone: "gate", rot: -Math.PI / 2, arch: "wood-studio" },
+  167: { c: 4, r: 6, zone: "gate", rot: -Math.PI / 2, arch: "wood-small" },
+  165: { c: 4, r: 7, zone: "gate", rot: -Math.PI / 2, arch: "steel-cube" },
+  234: { c: 12, r: 11, zone: "park", rot: 0, arch: "wood-park" },
+  235: { c: 13, r: 11, zone: "park", rot: 0, arch: "wood-mid" },
+  236: { c: 14, r: 11, zone: "park", rot: 0, arch: "steel-linear" },
+  237: { c: 15, r: 11, zone: "park", rot: 0, arch: "wood-park" },
+  238: { c: 16, r: 11, zone: "park", rot: 0, arch: "wood-mid" },
+  239: { c: 17, r: 11, zone: "park", rot: 0, arch: "steel-linear" },
+  241: { c: 12, r: 13, zone: "street", rot: 0, arch: "wood-studio" },
+  252: { c: 12, r: 14, zone: "street", rot: 0, arch: "wood-small" },
+  253: { c: 13, r: 14, zone: "street", rot: 0, arch: "wood-small" },
+  254: { c: 14, r: 14, zone: "street", rot: 0, arch: "steel-cube" },
+  255: { c: 15, r: 14, zone: "street", rot: 0, arch: "wood-park" },
+  256: { c: 16, r: 14, zone: "street", rot: 0, arch: "steel-cube" },
+  257: { c: 17, r: 14, zone: "street", rot: 0, arch: "wood-studio" },
+  258: { c: 18, r: 14, zone: "street", rot: 0, arch: "wood-small" },
+  259: { c: 19, r: 14, zone: "street", rot: 0, arch: "steel-linear" },
 };
 
 export const FEATURED_LOTS = new Set(Object.keys(FEATURED).map(Number));

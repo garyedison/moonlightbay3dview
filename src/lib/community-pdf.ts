@@ -1,4 +1,4 @@
-import { ARCH, FEATURED_LOTS, LOTS, WORLD, ZONE_LABEL, counts, lotArchetype } from "./community";
+import { ARCH, FEATURED_LOTS, LOTS, SITE, WORLD, ZONE_LABEL, counts, lotArchetype } from "./community";
 import { PdfDoc, downloadBlob } from "./pdf-kit";
 
 const INK = { r: 0.11, g: 0.13, b: 0.12 };
@@ -39,9 +39,11 @@ export function communityMapSvg() {
   <rect width="${w}" height="${h}" fill="#faf7f1"/>
   <text x="${pad}" y="28" font-family="Georgia, serif" font-size="22" fill="#1c211f">Moonlight Bay de Consejo — built-out community</text>
   <text x="${pad}" y="48" font-family="system-ui, sans-serif" font-size="12" fill="#6b6458">Schematic 3D model, not a survey. ${stats.total} homes · ${stats.steel} steel container · ${stats.wood} wood. Confirm lots with the developer.</text>
-  <rect x="${xOf(-8)}" y="${yOf(-14)}" width="${(WORLD.width + 24) / s}" height="${28 / s}" fill="#5e9aa8"/>
-  <text x="${xOf(WORLD.width / 2)}" y="${yOf(-4)}" text-anchor="middle" font-size="11" fill="#1c211f" font-family="system-ui">CHETUMAL BAY</text>
-  <rect x="${xOf(28)}" y="${yOf(48)}" width="${52 / s}" height="${72 / s}" fill="#4f8f96" opacity="0.9"/>
+  <rect x="${xOf(SITE.mangroveX - 4)}" y="${yOf(-2)}" width="${(SITE.mangroveW + 2) / s}" height="${(WORLD.depth + 4) / s}" fill="#3a5536"/>
+  <rect x="${xOf(SITE.canalX - SITE.canalW / 2)}" y="${yOf(4)}" width="${SITE.canalW / s}" height="${(WORLD.depth - 10) / s}" fill="#3e7a86"/>
+  <text x="${xOf(SITE.canalX)}" y="${yOf(WORLD.depth * 0.4)}" text-anchor="middle" font-size="9" fill="#faf7f1" font-family="Georgia, serif">CANAL</text>
+  <rect x="${xOf(SITE.bayX)}" y="${yOf(-8)}" width="${SITE.bayW / s}" height="${(WORLD.depth + 16) / s}" fill="#4e8f9c"/>
+  <text x="${xOf(SITE.bayX + 10)}" y="${yOf(WORLD.depth / 2)}" font-size="10" fill="#faf7f1" font-family="Georgia, serif">CHETUMAL BAY</text>
   ${houses}
   <g font-family="system-ui, sans-serif" font-size="12" fill="#1c211f">
     <rect x="${w - 230}" y="${h - 78}" width="12" height="12" fill="#2c5854"/>
@@ -87,19 +89,18 @@ export function buildCommunityPdf(): Blob {
     9,
   );
 
-  pdf.fill(WATER.r, WATER.g, WATER.b).rect(X(-10), Y(-2), (WORLD.width + 20) * s, 16 * s);
-  pdf.fill(INK.r, INK.g, INK.b).text("CHETUMAL BAY", X(WORLD.width / 2 - 28), Y(-8), 8);
-
-  pdf.fill(WATER.r * 0.9, WATER.g * 0.95, WATER.b).rect(X(4.2 * 8.2), Y(10.2 * 11.4), 12 * s, 72 * s);
-  pdf.rect(X(9.0 * 8.2), Y(10.2 * 11.4), 12 * s, 72 * s);
-  pdf.rect(X(4.2 * 8.2), Y(10.6 * 11.4), 52 * s, 16 * s);
+  pdf.fill(0.227, 0.333, 0.212).rect(X(SITE.mangroveX - 4), Y(WORLD.depth), (SITE.mangroveW + 2) * s, (WORLD.depth + 4) * s);
+  pdf.fill(WATER.r * 0.9, WATER.g * 0.95, WATER.b).rect(X(SITE.canalX - SITE.canalW / 2), Y(WORLD.depth - 4), SITE.canalW * s, (WORLD.depth - 10) * s);
+  pdf.fill(INK.r, INK.g, INK.b).text("CANAL", X(SITE.canalX - 8), Y(WORLD.depth * 0.45), 8);
+  pdf.fill(WATER.r, WATER.g, WATER.b).rect(X(SITE.bayX), Y(WORLD.depth + 8), SITE.bayW * s, (WORLD.depth + 16) * s);
+  pdf.fill(INK.r, INK.g, INK.b).text("CHETUMAL BAY", X(SITE.bayX + 4), Y(WORLD.depth * 0.5), 8);
 
   pdf.fill(PARK.r, PARK.g, PARK.b);
-  pdf.rect(X(6.2 * 8.2), Y(13.6 * 11.4), 22 * s, 18 * s);
-  pdf.rect(X(17.6 * 8.2), Y(7.6 * 11.4), 22 * s, 18 * s);
-  pdf.rect(X(13.6 * 8.2), Y(13.6 * 11.4), 22 * s, 18 * s);
+  pdf.rect(X(8 * 8.2), Y(8.4 * 11.4), 16 * s, 14 * s);
+  pdf.rect(X(13.5 * 8.2), Y(5.6 * 11.4), 14 * s, 14 * s);
+  pdf.rect(X(13 * 8.2), Y(12.6 * 11.4), 28 * s, 16 * s);
 
-  pdf.fill(SAND.r, SAND.g, SAND.b).rect(X(2), Y(WORLD.depth), 12 * s, WORLD.depth * s);
+  pdf.fill(SAND.r, SAND.g, SAND.b).rect(X(4.2 * 8.2), Y(WORLD.depth * 0.72), 6.5 * s, WORLD.depth * 0.72 * s);
 
   for (const lot of LOTS) {
     const arch = lotArchetype(lot);

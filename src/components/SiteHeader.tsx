@@ -12,7 +12,8 @@ const LINKS: { href: string; label: string; external?: boolean }[] = [
   { href: "#gate", label: "Gate" },
   { href: "#value", label: "Canal value" },
   { href: "/map", label: "Plat" },
-  { href: "/3d", label: "3D view" },
+  { href: "/3d", label: "3D tour" },
+  { href: "#tour", label: "Video" },
   { href: "/site-map.html", label: "July 2026", external: true },
   { href: "#exteriors", label: "Outside" },
 ];
