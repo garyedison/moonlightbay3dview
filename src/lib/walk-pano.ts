@@ -2,32 +2,55 @@ import * as THREE from "three";
 import type { PanoKey } from "./panos";
 
 /**
- * One equirectangular per room, inverted sphere at the camera.
- * Stitched from 6 views shot at the SAME standing point so the horizon
- * stays level when you look left/right — no cubemap face rotations.
+ * Six separate wall photos on an inverted cube — no equirect stitch.
+ * Looking forward: complete subject. Turn 90°: a different complete wall
+ * (nightstand, window, closet) so the bed is never cut in half.
+ *
+ * BoxGeometry groups: +X -X +Y -Y +Z -Z
+ * Camera yaw=0 looks −Z, so pz is the last material.
  */
-const cache = new Map<PanoKey, THREE.Texture>();
+const FACE_FILES = ["px", "nx", "py", "ny", "nz", "pz"] as const;
+
+const cache = new Map<string, THREE.Texture>();
 const loader = new THREE.TextureLoader();
 
 let mesh: THREE.Mesh | null = null;
 
-function tex(key: PanoKey): THREE.Texture {
+function faceTex(url: string, flipX: boolean): THREE.Texture {
+  const key = url + (flipX ? ":fx" : "");
   const hit = cache.get(key);
   if (hit) return hit;
-  const t = loader.load(`/pano/eq/${key}.jpg?v=eq1`);
+  const t = loader.load(url);
   t.colorSpace = THREE.SRGBColorSpace;
-  t.wrapS = THREE.RepeatWrapping;
+  t.center.set(0.5, 0.5);
+  if (flipX) {
+    t.wrapS = THREE.RepeatWrapping;
+    t.repeat.x = -1;
+  }
   t.minFilter = THREE.LinearFilter;
   cache.set(key, t);
   return t;
 }
 
+function mats(key: PanoKey): THREE.MeshBasicMaterial[] {
+  return FACE_FILES.map((f, i) => {
+    const isWall = f === "px" || f === "nx" || f === "pz" || f === "nz";
+    const t = faceTex(`/pano/${key}/${f}.jpg?v=walls1`, isWall);
+    if (f === "py") t.rotation = Math.PI;
+    if (f === "ny") t.rotation = Math.PI;
+    return new THREE.MeshBasicMaterial({
+      map: t,
+      side: THREE.BackSide,
+      toneMapped: false,
+      depthWrite: false,
+    });
+  });
+}
+
 function ensure(scene: THREE.Scene) {
   if (mesh) return mesh;
-  const geo = new THREE.SphereGeometry(40, 64, 40);
-  geo.scale(-1, 1, 1);
-  const mat = new THREE.MeshBasicMaterial({ toneMapped: false, depthWrite: false });
-  mesh = new THREE.Mesh(geo, mat);
+  const geo = new THREE.BoxGeometry(50, 50, 50);
+  mesh = new THREE.Mesh(geo, mats("kitchen"));
   mesh.renderOrder = -10;
   mesh.frustumCulled = false;
   mesh.visible = false;
@@ -37,11 +60,11 @@ function ensure(scene: THREE.Scene) {
 
 export function showPano(scene: THREE.Scene, key: PanoKey) {
   const m = ensure(scene);
-  const mat = m.material as THREE.MeshBasicMaterial;
-  mat.map = tex(key);
-  mat.needsUpdate = true;
+  const old = m.material;
+  m.material = mats(key);
+  if (Array.isArray(old)) old.forEach((mat) => mat.dispose());
   m.visible = true;
-  scene.background = new THREE.Color(0x1a2220);
+  scene.background = new THREE.Color(0x111111);
   if (scene.fog) scene.fog = null;
 }
 
