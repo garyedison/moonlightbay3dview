@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { SiteHeader } from "@/components/SiteHeader";
 import { Hero } from "@/components/Hero";
 import { TourReel } from "@/components/TourReel";
+import { RoomFilms } from "@/components/RoomFilms";
 import { Palette } from "@/components/Palette";
 import { RoomStudio } from "@/components/RoomStudio";
 import { FloorPlan } from "@/components/FloorPlan";
@@ -23,6 +24,7 @@ function Home() {
       <main>
         <Hero />
         <TourReel />
+        <RoomFilms />
         <Palette />
         <RoomStudio />
         <FloorPlan />
@@ -37,9 +39,9 @@ function Home() {
       <footer className="border-t border-line px-4 py-10 text-center sm:px-6">
         <p className="font-display text-2xl text-ink">Moonlight Bay</p>
         <p className="mt-2 text-sm text-muted">
-          Beach and canal villas, mixed lot catalog, gate-row cottages, and a 3D walk of the whole plat.{" "}
-          <a href="/3d" className="underline underline-offset-2">
-            Open the 3D community
+          Beach and canal villas, mixed lot catalog, gate-row cottages, and room films of the house.{" "}
+          <a href="#films" className="underline underline-offset-2">
+            Watch the rooms
           </a>
           {" · "}
           <a href="/map" className="underline underline-offset-2">

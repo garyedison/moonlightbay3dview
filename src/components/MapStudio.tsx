@@ -11,7 +11,6 @@ import {
   ZONE_LABEL,
   counts,
   lotArchetype,
-  randomLotN,
   type Kind,
   type Zone,
 } from "@/lib/community";
@@ -53,7 +52,7 @@ export function MapStudio() {
           </Link>
           <nav className="flex flex-wrap gap-2">
             <Button asChild size="sm" variant="outline">
-              <Link to="/3d">3D view</Link>
+              <Link to="/3d">Room films</Link>
             </Button>
             <Button type="button" size="sm" onClick={downloadCommunityPdf}>
               <Download className="size-4" />
@@ -142,7 +141,7 @@ export function MapStudio() {
                 <g
                   key={lot.n}
                   className="cursor-pointer"
-                  onClick={() => navigate({ to: "/3d", search: { lot: lot.n } })}
+                  onClick={() => navigate({ to: "/3d" })}
                   onPointerEnter={() => setHover(lot.n)}
                   onPointerLeave={() => setHover((n) => (n === lot.n ? null : n))}
                 >
@@ -201,10 +200,10 @@ export function MapStudio() {
           <Button
             type="button"
             variant="outline"
-            onClick={() => navigate({ to: "/3d", search: { lot: randomLotN() } })}
+            onClick={() => navigate({ to: "/3d" })}
           >
             <Shuffle className="size-4" />
-            Random home in 3D
+            Watch room films
           </Button>
           <a href="/site-map.html" className="inline-flex min-h-11 items-center px-3 text-sm text-lagoon underline">
             July 2026 availability tracker

@@ -1,5 +1,6 @@
 import { ChevronLeft, ChevronRight, Maximize2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { filmFor } from "@/lib/room-films";
 import { presentRoom, roomById, roomsFor } from "@/lib/villa";
 import { useStudio } from "@/lib/store";
 
@@ -36,11 +37,25 @@ export function RoomStudio() {
 
         <div className="mt-10 grid gap-6 lg:grid-cols-[1.5fr_1fr]">
           <div className="relative overflow-hidden rounded-xl bg-ink">
-            <img
-              src={room.image}
-              alt={room.title}
-              className="aspect-still w-full object-cover sm:aspect-photo"
-            />
+            {filmFor(room.id) ? (
+              <video
+                key={filmFor(room.id)}
+                src={filmFor(room.id)}
+                poster={room.image}
+                autoPlay
+                muted
+                loop
+                playsInline
+                controls
+                className="aspect-still w-full object-cover sm:aspect-photo"
+              />
+            ) : (
+              <img
+                src={room.image}
+                alt={room.title}
+                className="aspect-still w-full object-cover sm:aspect-photo"
+              />
+            )}
             <Button
               type="button"
               variant="pill"

@@ -49,10 +49,10 @@ export function Hero() {
             <p className="font-display text-2xl text-ink">{meta.beds}</p>
             <p className="text-sm leading-relaxed text-muted">{place.blurb}</p>
             <a
-              href="/3d"
+              href="#films"
               className="inline-flex min-h-11 items-center justify-center rounded-full bg-lagoon px-4 text-sm text-salt"
             >
-              3D walk of the whole community
+              Watch the rooms
             </a>
             <a
               href="/map"

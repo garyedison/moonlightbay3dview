@@ -1,4 +1,6 @@
-import { WalkStudio } from "@/components/WalkStudio";
+import { SiteHeader } from "@/components/SiteHeader";
+import { RoomFilms } from "@/components/RoomFilms";
+import { TourReel } from "@/components/TourReel";
 
 export function walkSearch(search: Record<string, unknown>): { lot?: number } {
   const n = Number(search.lot);
@@ -8,18 +10,25 @@ export function walkSearch(search: Record<string, unknown>): { lot?: number } {
 
 export const walkHead = () => ({
   meta: [
-    { title: "Moonlight Bay 3D View" },
+    { title: "Moonlight Bay room films" },
     {
       name: "description",
       content:
-        "Walk the Moonlight Bay de Consejo plat in 3D — every lot, mixed models, dollhouse and inside rooms.",
+        "Video walkthrough of each Moonlight Bay room — kitchen, living, dining, bedrooms, and bath.",
     },
   ],
 });
 
 export function WalkPage() {
-  return <WalkStudio />;
+  return (
+    <div className="min-h-screen bg-paper text-ink">
+      <SiteHeader />
+      <main>
+        <TourReel />
+        <RoomFilms />
+      </main>
+    </div>
+  );
 }
 
-/** Public path for the 3D community walk. */
 export const VIEW_3D_PATH = "/3d";
