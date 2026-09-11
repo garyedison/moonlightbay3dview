@@ -324,7 +324,7 @@ export const STYLES: QuoteStyle[] = [
     id: "pt200009",
     sku: "PT200009",
     name: "Two-story gable",
-    beds: "2BR / 1BA",
+    beds: "2BR / 2BA",
     area: "60 m² / 646 sf",
     story: "Two-story",
     look: "Two-story gable",
@@ -335,7 +335,7 @@ export const STYLES: QuoteStyle[] = [
     slab: 22000,
     tie: 2500,
     crane: 3500,
-    kit: "M",
+    kit: "L",
     exterior: {
       image: "/quote/pt200009.jpg",
       title: "Lot 127 · two-story gable",

@@ -101,7 +101,7 @@ figcaption { margin-top: 8px; font-size: 0.85rem; color: var(--muted); }
 .tables em { font-style: normal; color: var(--teak); font-size: 0.8rem; }
 .note { margin-top: 32px; font-size: 0.85rem; color: var(--muted); max-width: 42rem; }
 .band { background: color-mix(in oklab, var(--salt) 80%, white); }
-.styles { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin-top: 24px; }
+.styles { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-top: 24px; }
 .styles figure { margin: 0; background: var(--surface); border-radius: 14px; overflow: hidden; box-shadow: 0 0 0 1px rgba(28,33,31,0.06); }
 .styles img { aspect-ratio: 16/10; object-fit: cover; }
 .styles figcaption { padding: 12px 14px 16px; font-size: 0.88rem; }
