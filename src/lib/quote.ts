@@ -61,12 +61,10 @@ export const SITEWORK = {
   laborStack: 13500,
 };
 
-/** Quote uplifts requested for lots 115 / 127 presentations. */
+/** Customer-facing site numbers. Do not show internal markups on the BOQ. */
 export const PRICE = {
   slabMep: 35000,
   contingency: 20000,
-  shellUplift: 1.5,
-  laborUplift: 1.3,
   ffeFurnished: 30000,
 };
 
@@ -347,7 +345,7 @@ export const STYLES: QuoteStyle[] = [
 ];
 
 export function factoryOnSite(s: QuoteStyle) {
-  return Math.round(s.factory * PRICE.shellUplift);
+  return s.factory;
 }
 
 export function shellSubtotal(s: QuoteStyle) {
@@ -355,8 +353,7 @@ export function shellSubtotal(s: QuoteStyle) {
 }
 
 export function laborFor(s: QuoteStyle) {
-  const base = s.story === "Two-story" ? SITEWORK.laborStack : SITEWORK.laborSingle;
-  return Math.round(base * PRICE.laborUplift);
+  return s.story === "Two-story" ? SITEWORK.laborStack : SITEWORK.laborSingle;
 }
 
 export function ffeFor(s: QuoteStyle) {

@@ -102,7 +102,7 @@ export function QuoteStudio() {
             <p className="mt-1 text-sm text-muted">Pair on lots 115 + 127 · {usd(pairTotal(style))}</p>
             <dl className="mt-6 space-y-2 text-sm">
               {[
-                ["Factory shell unfurnished +50%", factoryOnSite(style)],
+                ["Factory shell unfurnished", factoryOnSite(style)],
                 ["Ocean freight China → Belize", style.freight],
                 ["Inland + duties", style.inland],
                 ["Slab, excavation, MEP", PRICE.slabMep],
@@ -111,8 +111,8 @@ export function QuoteStudio() {
                 ["Subtotal shell", shellSubtotal(style)],
                 ["Contingency", PRICE.contingency],
                 ["400 sf screened deck + fence", SITEWORK.exterior],
-                [style.story === "Two-story" ? "Labor +30% (stack + set)" : "Labor +30% (set)", labor],
-                [`FF&E kit ${style.kit} + furnished $30k`, ffe],
+                [style.story === "Two-story" ? "Labor (stack + set)" : "Labor (set)", labor],
+                [`FF&E kit ${style.kit} fully furnished`, ffe],
               ].map(([label, n]) => (
                 <div key={String(label)} className="flex justify-between gap-4">
                   <dt className="text-muted">{label}</dt>
