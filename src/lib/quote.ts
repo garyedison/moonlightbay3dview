@@ -61,11 +61,12 @@ export const SITEWORK = {
   laborStack: 13500,
 };
 
-/** Customer-facing site numbers. Do not show internal markups on the BOQ. */
+/** Site numbers. Shell includes internal profit; do not label the markup on the customer BOQ. */
 export const PRICE = {
   slabMep: 35000,
   contingency: 20000,
   ffeFurnished: 30000,
+  shellUplift: 1.5,
 };
 
 function living(): FfeLine[] {
@@ -345,7 +346,7 @@ export const STYLES: QuoteStyle[] = [
 ];
 
 export function factoryOnSite(s: QuoteStyle) {
-  return s.factory;
+  return Math.round(s.factory * PRICE.shellUplift);
 }
 
 export function shellSubtotal(s: QuoteStyle) {
