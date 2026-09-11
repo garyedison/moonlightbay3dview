@@ -3,10 +3,13 @@ import { Button } from "@/components/ui/button";
 import { useStudio } from "@/lib/store";
 import {
   KITS,
+  PRICE,
   QUOTE,
   SITEWORK,
   STYLES,
   allInOne,
+  factoryOnSite,
+  ffeFor,
   groupTotal,
   kitTotal,
   laborFor,
@@ -24,7 +27,7 @@ export function QuoteStudio() {
   const rooms = style.rooms;
   const room = rooms.find((r) => r.id === roomId) ?? rooms[0];
   const kit = KITS[style.kit];
-  const ffe = kitTotal(style.kit);
+  const ffe = ffeFor(style);
   const labor = laborFor(style);
   const openLightbox = useStudio((s) => s.openLightbox);
 
@@ -99,17 +102,17 @@ export function QuoteStudio() {
             <p className="mt-1 text-sm text-muted">Pair on lots 115 + 127 · {usd(pairTotal(style))}</p>
             <dl className="mt-6 space-y-2 text-sm">
               {[
-                ["Factory shell (unfurnished)", style.factory],
+                ["Factory shell unfurnished +50%", factoryOnSite(style)],
                 ["Ocean freight China → Belize", style.freight],
                 ["Inland + duties", style.inland],
-                ["Slab, excavation, MEP", style.slab],
+                ["Slab, excavation, MEP", PRICE.slabMep],
                 ["Hurricane tie-downs", style.tie],
                 ["Crane", style.crane],
                 ["Subtotal shell", shellSubtotal(style)],
-                ["Contingency", 20000],
+                ["Contingency", PRICE.contingency],
                 ["400 sf screened deck + fence", SITEWORK.exterior],
-                [style.story === "Two-story" ? "Labor (stack + set)" : "Labor (set)", labor],
-                [`FF&E kit ${style.kit}`, ffe],
+                [style.story === "Two-story" ? "Labor +30% (stack + set)" : "Labor +30% (set)", labor],
+                [`FF&E kit ${style.kit} + furnished $30k`, ffe],
               ].map(([label, n]) => (
                 <div key={String(label)} className="flex justify-between gap-4">
                   <dt className="text-muted">{label}</dt>
@@ -157,6 +160,7 @@ export function QuoteStudio() {
           <p className="mt-2 max-w-2xl text-sm text-muted">
             Same millwork and loose pieces as the villas so we buy in bulk. Screened-deck
             dining is in every kit — the porch is the same 400 sf on lots 115 and 127.
+            Kit total {usd(kitTotal(style.kit))} plus {usd(PRICE.ffeFurnished)} fully furnished.
           </p>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {kit.map((g) => (

@@ -38,7 +38,7 @@ export const QUOTE = {
   lots: [115, 127] as const,
   address: "Moonlight Bay de Consejo · 240-A Bayview Drive, Consejo, Belize",
   lotNote:
-    "Lots 115 and 127 are interior quarter-acre lots (not waterfront). The 1,000 sf living-area covenant for waterfront lots does not apply here — confirm with the developer before locking a compact plan.",
+    "Lot 115 sits on the canal bank. Lot 127 sits inland across the dirt road, looking at Lot 115. The porch on 127 faces the road and the neighbor — the water is hard to see from that deck.",
   deck: {
     area: 400,
     note: "Same 400 sf teak deck on every style, fully enclosed with mosquito screen walls and roof, white posts, ceiling fans.",
@@ -59,6 +59,15 @@ export const SITEWORK = {
   fence: FENCE,
   laborSingle: 8500,
   laborStack: 13500,
+};
+
+/** Quote uplifts requested for lots 115 / 127 presentations. */
+export const PRICE = {
+  slabMep: 35000,
+  contingency: 20000,
+  shellUplift: 1.5,
+  laborUplift: 1.3,
+  ffeFurnished: 30000,
 };
 
 function living(): FfeLine[] {
@@ -330,23 +339,32 @@ export const STYLES: QuoteStyle[] = [
     kit: "M",
     exterior: {
       image: "/quote/pt200009.jpg",
-      title: "Lot 115 · two-story gable",
-      note: "Gable roof, two bedrooms, 400 sf screened porch. Highest freight (full 40HQ).",
+      title: "Lot 127 · two-story gable",
+      note: "Inland of the dirt road. Porch faces Lot 115 across the street — water is hard to see.",
     },
     rooms: twoBrRooms,
   },
 ];
 
+export function factoryOnSite(s: QuoteStyle) {
+  return Math.round(s.factory * PRICE.shellUplift);
+}
+
 export function shellSubtotal(s: QuoteStyle) {
-  return s.factory + s.freight + s.inland + s.slab + s.tie + s.crane;
+  return factoryOnSite(s) + s.freight + s.inland + PRICE.slabMep + s.tie + s.crane;
 }
 
 export function laborFor(s: QuoteStyle) {
-  return s.story === "Two-story" ? SITEWORK.laborStack : SITEWORK.laborSingle;
+  const base = s.story === "Two-story" ? SITEWORK.laborStack : SITEWORK.laborSingle;
+  return Math.round(base * PRICE.laborUplift);
+}
+
+export function ffeFor(s: QuoteStyle) {
+  return kitTotal(s.kit) + PRICE.ffeFurnished;
 }
 
 export function allInOne(s: QuoteStyle) {
-  return shellSubtotal(s) + 20000 + SITEWORK.exterior + laborFor(s) + kitTotal(s.kit);
+  return shellSubtotal(s) + PRICE.contingency + SITEWORK.exterior + laborFor(s) + ffeFor(s);
 }
 
 export function pairTotal(s: QuoteStyle) {
