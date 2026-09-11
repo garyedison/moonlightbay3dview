@@ -3,6 +3,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 import { Hero } from "@/components/Hero";
 import { TourReel } from "@/components/TourReel";
 import { RoomFilms } from "@/components/RoomFilms";
+import { QuoteStudio } from "@/components/QuoteStudio";
 import { Palette } from "@/components/Palette";
 import { RoomStudio } from "@/components/RoomStudio";
 import { FloorPlan } from "@/components/FloorPlan";
@@ -25,6 +26,7 @@ function Home() {
         <Hero />
         <TourReel />
         <RoomFilms />
+        <QuoteStudio />
         <Palette />
         <RoomStudio />
         <FloorPlan />

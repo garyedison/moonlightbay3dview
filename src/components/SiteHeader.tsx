@@ -5,6 +5,7 @@ import type { SiteId } from "@/lib/villa";
 import { cn } from "@/lib/utils";
 
 const LINKS: { href: string; label: string; external?: boolean }[] = [
+  { href: "#quote", label: "Lots 115 / 127" },
   { href: "#palette", label: "Palette" },
   { href: "#rooms", label: "Rooms" },
   { href: "#plans", label: "Plans" },
