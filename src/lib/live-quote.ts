@@ -1,9 +1,13 @@
 import {
+  CUSTOMER_STYLES,
+  FFE_FREIGHT_HINT,
+  FFE_FREIGHT_LABEL,
   HIP_STYLE,
   KITS,
   PRICE,
   SITEWORK,
   SPIRAL_STYLE,
+  STYLES,
   factoryOnSite,
   groupTotal,
   laborFor,
@@ -44,7 +48,8 @@ export const SECTION_COPY: Record<LiveSection, { title: string; blurb: string }>
   },
   ffe: {
     title: "FF&E",
-    blurb: "Caribbean Salt furniture by room. Uncheck a sofa, a bath kit, or the whole install.",
+    blurb:
+      "Caribbean Salt furniture by room. A 20 ft container, DDP to the Moonlight Bay gate, ships the furniture. Take it off if you skip furnishings.",
   },
 };
 
@@ -182,16 +187,27 @@ export function liveLines(s: QuoteStyle): LiveLine[] {
     amount: PRICE.ffeFurnished,
   });
 
+  out.push({
+    id: "ffe-freight",
+    section: "ffe",
+    sectionLabel: "FF&E",
+    label: FFE_FREIGHT_LABEL,
+    hint: FFE_FREIGHT_HINT,
+    amount: PRICE.ffeFreight,
+  });
+
   return out;
 }
 
-/** Parent FF&E group ids (not nested SKU rows, not install). */
+const FFE_STANDALONE = new Set(["ffe-install", "ffe-freight"]);
+
+/** Parent FF&E group ids (not nested SKU rows, not install or container freight). */
 export function isFfeChild(id: string) {
   return id.includes("-CS-");
 }
 
 export function isFfeParent(id: string) {
-  return id.startsWith("ffe-") && !isFfeChild(id) && id !== "ffe-install";
+  return id.startsWith("ffe-") && !isFfeChild(id) && !FFE_STANDALONE.has(id);
 }
 
 export function childrenOf(parentId: string, lines: LiveLine[]) {
@@ -211,7 +227,7 @@ export const PRESETS: { id: PresetId; label: string; hint: string }[] = [
   { id: "landed", label: "Shell, landed", hint: "Factory + freight + inland" },
   { id: "civil", label: "Shell + civil / MEP", hint: "Landed, plus slab, MEP, ties, crane, contingency" },
   { id: "unfurnished", label: "Unfurnished on the lot", hint: "Ready to live in empty" },
-  { id: "furnished", label: "Fully furnished", hint: "All-in, furniture installed" },
+  { id: "furnished", label: "Fully furnished", hint: "All-in, furniture plus 20 ft container DDP to the gate" },
 ];
 
 export function presetIds(s: QuoteStyle, preset: PresetId, lines = liveLines(s)): string[] {
@@ -269,6 +285,11 @@ export function sectionTotal(lines: LiveLine[], on: Set<string>, section: LiveSe
   );
 }
 
-export const BOQ_STYLES = [SPIRAL_STYLE, HIP_STYLE] as const;
+const BOQ_SEEN = new Set<string>();
+export const BOQ_STYLES = [SPIRAL_STYLE, ...CUSTOMER_STYLES, ...STYLES].filter((s) => {
+  if (BOQ_SEEN.has(s.id)) return false;
+  BOQ_SEEN.add(s.id);
+  return true;
+});
 
 export { SPIRAL_STYLE, HIP_STYLE };

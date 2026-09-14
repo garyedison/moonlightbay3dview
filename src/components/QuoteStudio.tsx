@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useStudio } from "@/lib/store";
-import { CUSTOMER_STYLES, KITS, PRICE, QUOTE, SITEWORK, allInOne, factoryOnSite, ffeFor, groupTotal, kitTotal, laborFor, pairTotal, shellSubtotal, usd, type QuoteStyle } from "@/lib/quote";
+import { CUSTOMER_STYLES, FFE_FREIGHT_LABEL, KITS, PRICE, QUOTE, SITEWORK, allInOne, factoryOnSite, ffeFor, ffeGoods, groupTotal, kitTotal, laborFor, pairTotal, shellSubtotal, usd, type QuoteStyle } from "@/lib/quote";
 import { cn } from "@/lib/utils";
 
 export function QuoteStudio() {
@@ -104,7 +104,8 @@ export function QuoteStudio() {
                 ["Contingency", PRICE.contingency],
                 ["400 sf screened deck + fence", SITEWORK.exterior],
                 ["Assembly labor", labor],
-                ["Furnishings, fully installed", ffe],
+                ["Furnishings, fully installed", ffeGoods(style)],
+                [FFE_FREIGHT_LABEL, PRICE.ffeFreight],
               ].map(([label, n]) => (
                 <div key={String(label)} className="flex justify-between gap-4">
                   <dt className="text-muted">{label}</dt>
@@ -114,7 +115,9 @@ export function QuoteStudio() {
             </dl>
             <p className="mt-5 text-xs leading-relaxed text-muted">
               Deck {usd(SITEWORK.deck)} · mosquito screen {usd(SITEWORK.screen)} · rail {usd(SITEWORK.rail)} ·
-              wood fence {usd(SITEWORK.fence)}. Working draft — not a contract.
+              wood fence {usd(SITEWORK.fence)}. Furniture ships in one 20 ft container, DDP to the
+              Moonlight Bay gate ({usd(PRICE.ffeFreight)}) — drop it if the house is unfurnished.
+              Working draft — not a contract.
             </p>
           </div>
         </div>
@@ -152,7 +155,9 @@ export function QuoteStudio() {
           <p className="mt-2 max-w-2xl text-sm text-muted">
             Same millwork and loose pieces as the villas so we buy in bulk. Screened-deck
             dining is in every kit — the porch is the same 400 sf on lots 115 and 127.
-            Furnishings {usd(kitTotal(style.kit))} plus {usd(PRICE.ffeFurnished)} fully furnished.
+            Furnishings {usd(kitTotal(style.kit))} plus {usd(PRICE.ffeFurnished)} install plus{" "}
+            {usd(PRICE.ffeFreight)} for a 20 ft container, DDP China port to the Moonlight Bay gate.
+            Skip furnishings and that container drops off.
           </p>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {kit.map((g) => (

@@ -10,6 +10,7 @@ import {
   allInOne,
   factoryOnSite,
   ffeFor,
+  ffeGoods,
   groupTotal,
   kitTotal,
   laborFor,
@@ -96,7 +97,8 @@ export function spiralBreakdown(s: QuoteStyle = SPIRAL_STYLE) {
     ["Contingency", PRICE.contingency],
     ["400 sf open deck + roof deck + fence", siteworkFor(s)],
     ["Assembly labor", laborFor(s)],
-    ["Furnishings, fully installed", ffeFor(s)],
+    ["Furnishings, fully installed", ffeGoods(s)],
+    ["20 ft FF&E container, DDP to the gate", PRICE.ffeFreight],
   ] as const;
 }
 
@@ -116,6 +118,7 @@ export {
   allInOne,
   factoryOnSite,
   ffeFor,
+  ffeGoods,
   groupTotal,
   kitTotal,
   laborFor,

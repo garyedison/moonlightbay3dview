@@ -83,11 +83,16 @@ export const PRICE = {
   slabMep: 35000,
   contingency: 20000,
   ffeFurnished: 30000,
+  /** One 20 ft container of FF&E, DDP China port to the Moonlight Bay gate. Only if furnished. */
+  ffeFreight: 12000,
   shellUplift: 1.5,
   /** Belizean crew is slower — bill assembly at 1.5× the $280 factory day rate. */
   laborUplift: 1.5,
   laborDayBilled: 420,
 };
+
+export const FFE_FREIGHT_LABEL = "20 ft FF&E container, DDP to the gate";
+export const FFE_FREIGHT_HINT = "China port to the Moonlight Bay entrance. Furniture only — not the house.";
 
 function living(): FfeLine[] {
   return [
@@ -452,8 +457,14 @@ export function siteworkFor(s: QuoteStyle) {
   return s.sitework ?? SITEWORK.exterior;
 }
 
-export function ffeFor(s: QuoteStyle) {
+/** Kit + install. Does not include the 20 ft DDP furniture container. */
+export function ffeGoods(s: QuoteStyle) {
   return kitTotal(s.kit) + PRICE.ffeFurnished + (s.extraFfe ?? 0);
+}
+
+/** Furnished package: goods, install, and the 20 ft container DDP to the gate. */
+export function ffeFor(s: QuoteStyle) {
+  return ffeGoods(s) + PRICE.ffeFreight;
 }
 
 export function allInOne(s: QuoteStyle) {

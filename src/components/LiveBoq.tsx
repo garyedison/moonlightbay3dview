@@ -111,12 +111,13 @@ export function LiveBoq({ initial = BOQ_STYLES[0] }: { initial?: QuoteStyle }) {
 
   return (
     <section id="boq" className="mt-14 scroll-mt-24">
-      <p className="text-xs tracking-[0.2em] text-teak uppercase">Build your price · Lot 115</p>
+      <p className="text-xs tracking-[0.2em] text-teak uppercase">Build your price</p>
       <h3 className="mt-2 font-display text-3xl text-ink">Add or take away any line</h3>
       <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
         Start from the shell landed in Belize. Turn on civil and MEP, the deck, assembly, or
-        furniture room by room. Uncheck a sofa if you only want the shell. Lot cost is separate.
-        Working draft — not a contract.
+        furniture room by room. Furnished includes a 20 ft container, DDP from China to the
+        Moonlight Bay gate — take it off if you skip the furniture. Lot cost is separate. Working
+        draft — not a contract.
       </p>
 
       <div className="mt-5 flex flex-wrap gap-2">
@@ -197,7 +198,7 @@ export function LiveBoq({ initial = BOQ_STYLES[0] }: { initial?: QuoteStyle }) {
         </div>
 
         <aside className="rounded-xl bg-ink p-6 text-salt shadow-border lg:sticky lg:top-24">
-          <p className="text-xs tracking-[0.18em] text-sand uppercase">{style.name} · Lot 115</p>
+          <p className="text-xs tracking-[0.18em] text-sand uppercase">{style.name}</p>
           <p className="mt-2 font-display text-4xl">{usd(total)}</p>
           <p className="mt-1 text-sm text-sand/80">Your build, as checked</p>
           <dl className="mt-6 space-y-2 text-sm">
@@ -224,7 +225,8 @@ export function LiveBoq({ initial = BOQ_STYLES[0] }: { initial?: QuoteStyle }) {
           </dl>
           <p className="mt-6 text-xs leading-relaxed text-sand/70">
             Shell landed is the factory house plus ocean freight and inland. Civil is the slab and
-            excavation. MEP is electrical, plumbing, and septic. Lot is not in this number.
+            excavation. MEP is electrical, plumbing, and septic. FF&E freight is a 20 ft container,
+            DDP to the gate — only if you take the furniture. Lot is not in this number.
           </p>
         </aside>
       </div>

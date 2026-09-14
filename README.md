@@ -8,7 +8,7 @@ Interactive studio for the Moonlight Bay de Consejo container homes in Belize �
 
 - Beach + canal villa interiors (Caribbean Salt palette)
 - Mixed neighborhood bands: beach 196–199, canal 103–107, park 234–239, street 241 / 252–259
-- Lot 115 customer look: cedar spiral-deck container (2 bed / 2 bath, 400 sf open teak deck) beside the previous hip-roof quote, with a live BOQ the customer can add or take away (shell landed, civil/MEP, FF&E)
+- Lot 115 customer look: cedar spiral-deck container (2 bed / 2 bath, 400 sf open teak deck) beside the previous hip-roof quote, with a live BOQ the customer can add or take away (shell landed, civil/MEP, FF&E). Furnished includes a 20 ft container DDP to the Moonlight Bay gate ($12,000).
 - Gate-row and canal-value cottages, furnished $180k–$250k
 - 3D dollhouse / walk / inside rooms of every lot
 - July 2026 site-map snapshot (confirm current lots with the developer)
