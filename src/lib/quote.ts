@@ -29,6 +29,9 @@ export type QuoteStyle = {
   exterior: { image: string; title: string; note: string };
   rooms: { id: string; name: string; image: string; caption: string }[];
   kit: "S" | "M" | "L";
+  laborHours: number;
+  laborDays: number;
+  laborCost: number;
 };
 
 export const QUOTE = {
@@ -57,9 +60,10 @@ export const SITEWORK = {
   screen: SCREEN,
   rail: RAIL,
   fence: FENCE,
-  laborSingle: 8500,
-  laborStack: 13500,
 };
+
+/** Official assembly: $280 / 10-hour day. Hip roof matches 54 m² sheet (80 h / 8 days). Compact matches 43.9 m² sheet (63 h). Two-story scaled 1.5× for stack. */
+export const LABOR_DAY = 280;
 
 /** Site numbers. Shell includes internal profit; do not label the markup on the customer BOQ. */
 export const PRICE = {
@@ -185,7 +189,7 @@ export const STYLES: QuoteStyle[] = [
   {
     id: "pt211222",
     sku: "PT211222",
-    name: "Hip roof",
+    name: "Hip-roof bungalow",
     beds: "2BR / 2BA",
     area: "54 m² / 581 sf",
     story: "Single",
@@ -198,17 +202,46 @@ export const STYLES: QuoteStyle[] = [
     tie: 2000,
     crane: 2500,
     kit: "L",
+    laborHours: 80,
+    laborDays: 8,
+    laborCost: 2240,
     exterior: {
       image: "/quote/pt211222.jpg",
-      title: "Lot 115 · hip roof",
+      title: "Hip-roof bungalow",
       note: "Salt-white hip roof, lagoon door, 400 sf screened teak porch.",
+    },
+    rooms: twoBrRooms,
+  },
+  {
+    id: "pt200009",
+    sku: "PT200009",
+    name: "Two-story gable",
+    beds: "2BR / 2BA",
+    area: "60 m² / 646 sf",
+    story: "Two-story",
+    look: "Two-story gable",
+    ship: "1 / 40HQ",
+    factory: 17500,
+    freight: 19000,
+    inland: 5000,
+    slab: 22000,
+    tie: 2500,
+    crane: 3500,
+    kit: "L",
+    laborHours: 120,
+    laborDays: 12,
+    laborCost: 3360,
+    exterior: {
+      image: "/quote/pt200009.jpg",
+      title: "Two-story gable",
+      note: "Two stacked volumes, gable roof, 400 sf screened teak porch.",
     },
     rooms: twoBrRooms,
   },
   {
     id: "pt220348-2",
     sku: "PT220348-2",
-    name: "Skillion long",
+    name: "Long terrace",
     beds: "2BR / 1BA",
     area: "59 m² / 635 sf",
     story: "Single",
@@ -221,10 +254,13 @@ export const STYLES: QuoteStyle[] = [
     tie: 2000,
     crane: 2500,
     kit: "M",
+    laborHours: 90,
+    laborDays: 9,
+    laborCost: 2520,
     exterior: {
       image: "/quote/pt220348-2.jpg",
-      title: "Lot 127 · skillion long",
-      note: "Charcoal skillion, salt-white walls, screened porch along the garden.",
+      title: "Long terrace",
+      note: "Long single-story plan, salt-white walls, screened porch along the garden.",
     },
     rooms: twoBrRooms,
   },
@@ -244,9 +280,12 @@ export const STYLES: QuoteStyle[] = [
     tie: 2000,
     crane: 2500,
     kit: "M",
+    laborHours: 63,
+    laborDays: 6.3,
+    laborCost: 1764,
     exterior: {
       image: "/quote/pt220348-3.jpg",
-      title: "Lot 115 · skillion terrace",
+      title: "Skillion terrace",
       note: "Smaller shell, same 400 sf screened deck as the evening room.",
     },
     rooms: twoBrRooms,
@@ -267,17 +306,20 @@ export const STYLES: QuoteStyle[] = [
     tie: 2000,
     crane: 2500,
     kit: "S",
+    laborHours: 42,
+    laborDays: 4.2,
+    laborCost: 1176,
     exterior: {
       image: "/quote/pt220348-1.jpg",
-      title: "Lot 127 · compact 1BR",
-      note: "Smallest factory shell. The screened deck is larger than the house.",
+      title: "Compact 1BR",
+      note: "Smallest shell. The screened deck is larger than the house.",
     },
     rooms: oneBrRooms,
   },
   {
     id: "pt210223-2",
     sku: "PT210223-2",
-    name: "Carport",
+    name: "Carport bungalow",
     beds: "2BR / 1BA",
     area: "59 m² / 635 sf",
     story: "Single",
@@ -290,9 +332,12 @@ export const STYLES: QuoteStyle[] = [
     tie: 2000,
     crane: 2500,
     kit: "M",
+    laborHours: 90,
+    laborDays: 9,
+    laborCost: 2520,
     exterior: {
       image: "/quote/pt210223-2.jpg",
-      title: "Lot 115 · carport",
+      title: "Carport bungalow",
       note: "Covered parking, salt-white shell, screened porch on the garden side.",
     },
     rooms: twoBrRooms,
@@ -313,37 +358,22 @@ export const STYLES: QuoteStyle[] = [
     tie: 2500,
     crane: 3500,
     kit: "S",
+    laborHours: 120,
+    laborDays: 12,
+    laborCost: 3360,
     exterior: {
       image: "/quote/pt190249.jpg",
-      title: "Lot 127 · two-story stair",
+      title: "Two-story stair",
       note: "External teak stair, loft bedroom, screened deck at grade.",
     },
     rooms: oneBrRooms,
   },
-  {
-    id: "pt200009",
-    sku: "PT200009",
-    name: "Two-story gable",
-    beds: "2BR / 2BA",
-    area: "60 m² / 646 sf",
-    story: "Two-story",
-    look: "Two-story gable",
-    ship: "1 / 40HQ",
-    factory: 17500,
-    freight: 19000,
-    inland: 5000,
-    slab: 22000,
-    tie: 2500,
-    crane: 3500,
-    kit: "L",
-    exterior: {
-      image: "/quote/pt200009.jpg",
-      title: "Lot 127 · two-story gable",
-      note: "Inland of the dirt road. Porch faces Lot 115 across the street — water is hard to see.",
-    },
-    rooms: twoBrRooms,
-  },
 ];
+
+/** Three styles shown to customers — names only, no supplier codes. */
+export const CUSTOMER_STYLES = STYLES.filter((s) =>
+  ["pt211222", "pt200009", "pt220348-2"].includes(s.id),
+);
 
 export function factoryOnSite(s: QuoteStyle) {
   return Math.round(s.factory * PRICE.shellUplift);
@@ -354,7 +384,7 @@ export function shellSubtotal(s: QuoteStyle) {
 }
 
 export function laborFor(s: QuoteStyle) {
-  return s.story === "Two-story" ? SITEWORK.laborStack : SITEWORK.laborSingle;
+  return s.laborCost;
 }
 
 export function ffeFor(s: QuoteStyle) {

@@ -1,28 +1,12 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useStudio } from "@/lib/store";
-import {
-  KITS,
-  PRICE,
-  QUOTE,
-  SITEWORK,
-  STYLES,
-  allInOne,
-  factoryOnSite,
-  ffeFor,
-  groupTotal,
-  kitTotal,
-  laborFor,
-  pairTotal,
-  shellSubtotal,
-  usd,
-  type QuoteStyle,
-} from "@/lib/quote";
+import { CUSTOMER_STYLES, KITS, PRICE, QUOTE, SITEWORK, allInOne, factoryOnSite, ffeFor, groupTotal, kitTotal, laborFor, pairTotal, shellSubtotal, usd, type QuoteStyle } from "@/lib/quote";
 import { cn } from "@/lib/utils";
 
 export function QuoteStudio() {
-  const [sku, setSku] = useState(STYLES[0].id);
-  const style = STYLES.find((s) => s.id === sku) ?? STYLES[0];
+  const [sku, setSku] = useState(CUSTOMER_STYLES[0].id);
+  const style = CUSTOMER_STYLES.find((s) => s.id === sku) ?? CUSTOMER_STYLES[0];
   const [roomId, setRoomId] = useState(style.rooms[0].id);
   const rooms = style.rooms;
   const room = rooms.find((r) => r.id === roomId) ?? rooms[0];
@@ -41,12 +25,12 @@ export function QuoteStudio() {
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <p className="text-xs tracking-[0.2em] text-teak uppercase">Customer quote · lots 115 & 127</p>
         <h2 className="mt-3 max-w-3xl font-display text-4xl font-medium text-ink sm:text-5xl">
-          Seven factory shells. One Caribbean Salt kit. A 400 sf screened deck on both lots.
+          Three homes. One Caribbean Salt kit. A 400 sf screened deck on both lots.
         </h2>
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted sm:text-base">
           Draft for {QUOTE.billTo}. Pick a style — we quote it twice, once per quarter-acre
-          lot. Factory is unfurnished; FF&E, the mosquito-screened porch, fence, and set-up
-          labor are now priced below.
+          lot. The shell is unfurnished; furnishings, the mosquito-screened porch, fence, and
+          assembly labor are priced below.
         </p>
 
         <div className="mt-8 overflow-hidden rounded-xl bg-ink">
@@ -61,7 +45,7 @@ export function QuoteStudio() {
         </div>
 
         <div className="mt-8 flex flex-wrap gap-2">
-          {STYLES.map((s) => (
+          {CUSTOMER_STYLES.map((s) => (
             <button
               key={s.id}
               type="button"
@@ -71,7 +55,7 @@ export function QuoteStudio() {
                 s.id === style.id ? "bg-lagoon text-salt" : "bg-paper text-ink shadow-[0_0_0_1px_rgba(28,33,31,0.12)]",
               )}
             >
-              {s.sku} · {s.beds}
+              {s.name} · {s.beds}
             </button>
           ))}
         </div>
@@ -85,13 +69,13 @@ export function QuoteStudio() {
               onClick={() => openLightbox(style.exterior.image)}
             />
             <div className="bg-surface p-5">
-              <p className="text-xs tracking-[0.18em] text-teak uppercase">{style.sku}</p>
+              <p className="text-xs tracking-[0.18em] text-teak uppercase">{style.beds}</p>
               <h3 className="mt-1 font-display text-3xl text-ink">
-                {style.name} · {style.beds}
+                {style.name}
               </h3>
               <p className="mt-2 text-sm leading-relaxed text-muted">{style.exterior.note}</p>
               <p className="mt-3 text-sm text-ink">
-                {style.area} · {style.story} · ships {style.ship}
+                {style.area} · {style.story === "Two-story" ? "Two-story" : "Single story"} · assembly {style.laborDays} days
               </p>
             </div>
           </div>
@@ -102,8 +86,8 @@ export function QuoteStudio() {
             <p className="mt-1 text-sm text-muted">Pair on lots 115 + 127 · {usd(pairTotal(style))}</p>
             <dl className="mt-6 space-y-2 text-sm">
               {[
-                ["Factory shell unfurnished", factoryOnSite(style)],
-                ["Ocean freight China → Belize", style.freight],
+                ["Unfurnished shell", factoryOnSite(style)],
+                ["Ocean freight", style.freight],
                 ["Inland + duties", style.inland],
                 ["Slab, excavation, MEP", PRICE.slabMep],
                 ["Hurricane tie-downs", style.tie],
@@ -111,8 +95,8 @@ export function QuoteStudio() {
                 ["Subtotal shell", shellSubtotal(style)],
                 ["Contingency", PRICE.contingency],
                 ["400 sf screened deck + fence", SITEWORK.exterior],
-                [style.story === "Two-story" ? "Labor (stack + set)" : "Labor (set)", labor],
-                [`FF&E kit ${style.kit} fully furnished`, ffe],
+                ["Assembly labor", labor],
+                ["Furnishings, fully installed", ffe],
               ].map(([label, n]) => (
                 <div key={String(label)} className="flex justify-between gap-4">
                   <dt className="text-muted">{label}</dt>
@@ -155,12 +139,12 @@ export function QuoteStudio() {
         </div>
 
         <div className="mt-12">
-          <p className="text-xs tracking-[0.2em] text-teak uppercase">FF&E BOQ · kit {style.kit}</p>
+          <p className="text-xs tracking-[0.2em] text-teak uppercase">FF&E BOQ</p>
           <h3 className="mt-2 font-display text-3xl text-ink">Furniture for one home</h3>
           <p className="mt-2 max-w-2xl text-sm text-muted">
             Same millwork and loose pieces as the villas so we buy in bulk. Screened-deck
             dining is in every kit — the porch is the same 400 sf on lots 115 and 127.
-            Kit total {usd(kitTotal(style.kit))} plus {usd(PRICE.ffeFurnished)} fully furnished.
+            Furnishings {usd(kitTotal(style.kit))} plus {usd(PRICE.ffeFurnished)} fully furnished.
           </p>
           <div className="mt-6 grid gap-4 md:grid-cols-2">
             {kit.map((g) => (
