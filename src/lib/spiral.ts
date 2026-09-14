@@ -58,16 +58,6 @@ export const SPIRAL_TOUR: TourRoom[] = [
   { id: "roof", name: "Roof deck", image: "/quote/spiral/roof.jpg", caption: "Cable-rail roof deck. Two teak Adirondack chairs." },
 ];
 
-export const SPIRAL_FILMS = [
-  { id: "reel", name: "Full walk", src: "/tour/spiral/reel.mp4", poster: "/quote/spiral/exterior.jpg", caption: "Outside orbit, teak deck, living, kitchen, primary, roof deck — one reel." },
-  { id: "outside", name: "Outside", src: "/tour/spiral/outside.mp4", poster: "/quote/spiral/exterior.jpg", caption: "Orbit of the cedar-and-corten house on the Lot 115 canal bank." },
-  { id: "deck", name: "Deck", src: "/tour/spiral/deck.mp4", poster: "/quote/spiral/deck.jpg", caption: "Walk the 400 sf open teak deck toward the sliders." },
-  { id: "living", name: "Living", src: "/tour/spiral/living.mp4", poster: "/quote/spiral/living.jpg", caption: "Dolly through the living room to the canal." },
-  { id: "kitchen", name: "Kitchen", src: "/tour/spiral/kitchen.mp4", poster: "/quote/spiral/kitchen.jpg", caption: "Pan across the factory teak galley." },
-  { id: "bed1", name: "Primary", src: "/tour/spiral/bed1.mp4", poster: "/quote/spiral/bed1.jpg", caption: "Upstairs primary, balcony to the water." },
-  { id: "roof", name: "Roof deck", src: "/tour/spiral/roof.mp4", poster: "/quote/spiral/roof.jpg", caption: "Adirondack chairs looking at the canal." },
-];
-
 export const SPIRAL_SPECS = [
   ["Beds / baths", "2 bed / 2 bath — one up, one down"],
   ["Enclosed", "768 sf · 16 × 32 ft footprint"],

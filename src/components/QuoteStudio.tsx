@@ -35,8 +35,8 @@ export function QuoteStudio() {
         <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink">
           A customer asked for a cedar spiral-deck container on Lot 115 instead of the hip-roof.
           That look is quoted separately —{" "}
-          <a href="/lot-115" className="underline underline-offset-2">
-            Lot 115 customer look, side by side
+          <a href="/lot-115#boq" className="underline underline-offset-2">
+            Lot 115 customer look, with a live BOQ you can add or take away
           </a>
           .
         </p>

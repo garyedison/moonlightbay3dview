@@ -11,7 +11,7 @@ export const Route = createFileRoute("/lot-115")({
       {
         name: "description",
         content:
-          "Customer look on Lot 115: cedar spiral-deck container, 2 bed / 2 bath, 400 sf teak deck. Side-by-side with the hip-roof bungalow previously quoted.",
+          "Customer look on Lot 115: cedar spiral-deck container, 2 bed / 2 bath, 400 sf teak deck. Live BOQ — add or take away the shell, civil, MEP, and FF&E.",
       },
     ],
   }),
@@ -27,11 +27,8 @@ function Lot115Page() {
       <footer className="border-t border-line px-4 py-10 text-center sm:px-6">
         <p className="font-display text-2xl text-ink">Moonlight Bay</p>
         <p className="mt-2 text-sm text-muted">
-          Lot 115 canal bank · spiral-deck container beside the previous hip-roof quote.{" "}
-          <a href="/3d?lot=115" className="underline underline-offset-2">
-            Open the 3D walk
-          </a>
-          .
+          Lot 115 canal bank · spiral-deck container beside the previous hip-roof quote. Build the
+          price line by line on this page.
         </p>
       </footer>
       <Lightbox />

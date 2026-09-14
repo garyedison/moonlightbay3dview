@@ -1,24 +1,16 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useStudio } from "@/lib/store";
+import { LiveBoq } from "@/components/LiveBoq";
 import {
   COMPARE_ROWS,
   HIP_STYLE,
-  KITS,
   LOWER_ZONES,
-  PRICE,
-  SPIRAL_FILMS,
-  SPIRAL_ROOF_FFE,
-  SPIRAL_SITE,
   SPIRAL_SPECS,
   SPIRAL_STYLE,
   SPIRAL_TOUR,
   UPPER_ZONES,
-  allInOne,
-  ffeFor,
-  groupTotal,
   hipVsSpiral,
-  spiralBreakdown,
   usd,
 } from "@/lib/spiral";
 import { cn } from "@/lib/utils";
@@ -31,11 +23,7 @@ export function SpiralCompare() {
   const rooms = pick === "spiral" ? SPIRAL_TOUR : style.rooms;
   const [roomId, setRoomId] = useState(rooms[0].id);
   const room = rooms.find((r) => r.id === roomId) ?? rooms[0];
-  const [filmId, setFilmId] = useState(SPIRAL_FILMS[0].id);
-  const film = SPIRAL_FILMS.find((f) => f.id === filmId) ?? SPIRAL_FILMS[0];
   const [planFloor, setPlanFloor] = useState<1 | 2>(1);
-  const kit = KITS.L;
-  const lines = spiralBreakdown(SPIRAL_STYLE);
 
   function choose(next: "spiral" | "hip") {
     setPick(next);
@@ -109,52 +97,12 @@ export function SpiralCompare() {
           </table>
           <p className="px-4 py-3 text-xs text-muted">
             The spiral house is {usd(delta)} more. Extra enclosed floor, second-story bath, cedar cladding,
-            spiral stair, and a roof deck. Lot cost is separate. Working draft — not a contract.
+            spiral stair, and a roof deck. Lot cost is separate. Working draft — not a contract.{" "}
+            <a href="#boq" className="underline underline-offset-2">
+              Build either price line by line
+            </a>
+            .
           </p>
-        </div>
-
-        <div className="mt-14">
-          <p className="text-xs tracking-[0.2em] text-teak uppercase">3D walk · inside and outside</p>
-          <h3 className="mt-2 font-display text-3xl text-ink">Walk the house on Lot 115</h3>
-          <p className="mt-2 max-w-2xl text-sm text-muted">
-            Planning films of this shell with the factory furniture set — not a captured Matterport of a built house.
-          </p>
-          <div className="mt-5 overflow-hidden rounded-xl bg-ink shadow-border">
-            <video
-              key={film.src}
-              src={film.src}
-              poster={film.poster}
-              controls
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="aspect-video w-full object-cover"
-            >
-              Your browser cannot play this walkthrough.
-            </video>
-          </div>
-          <div className="mt-4 flex flex-wrap gap-2">
-            {SPIRAL_FILMS.map((f) => (
-              <button
-                key={f.id}
-                type="button"
-                onClick={() => setFilmId(f.id)}
-                className={cn(
-                  "min-h-11 rounded-full px-4 text-sm",
-                  f.id === film.id ? "bg-lagoon text-salt" : "bg-salt text-ink shadow-[0_0_0_1px_rgba(28,33,31,0.12)]",
-                )}
-              >
-                {f.name}
-              </button>
-            ))}
-          </div>
-          <p className="mt-3 text-sm text-muted">{film.caption}</p>
-          <div className="mt-5">
-            <Button asChild className="min-h-11">
-              <a href="/3d?lot=115">Open Lot 115 in the 3D walk</a>
-            </Button>
-          </div>
         </div>
 
         <div className="mt-14">
@@ -228,51 +176,7 @@ export function SpiralCompare() {
           <p className="mt-3 text-sm text-muted">{room.caption}</p>
         </div>
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-[1.3fr_1fr]">
-          <div>
-            <p className="text-xs tracking-[0.2em] text-teak uppercase">Quote · Lot 115 only</p>
-            <h3 className="mt-2 font-display text-3xl text-ink">All-in to build the spiral house</h3>
-            <p className="mt-2 text-sm text-muted">
-              Factory two-story container, customized with a second bath, cedar cladding, spiral stair, and roof deck.
-              Caribbean Salt FF&E fitted before ship.
-            </p>
-            <dl className="mt-6 space-y-2 text-sm">
-              {lines.map(([label, n]) => (
-                <div key={label} className="flex justify-between gap-4">
-                  <dt className={label.startsWith("Subtotal") ? "text-ink" : "text-muted"}>{label}</dt>
-                  <dd className="tabular-nums text-ink">{usd(n)}</dd>
-                </div>
-              ))}
-            </dl>
-            <p className="mt-5 font-display text-4xl text-ink">{usd(allInOne(SPIRAL_STYLE))}</p>
-            <p className="mt-1 text-sm text-muted">
-              Deck {usd(SPIRAL_SITE.deck)} · roof deck {usd(SPIRAL_SITE.roof)} · cable rail {usd(SPIRAL_SITE.rail)} ·
-              fence {usd(SPIRAL_SITE.fence)}. Lot not included.
-            </p>
-          </div>
-          <aside className="rounded-xl bg-surface p-6 shadow-border">
-            <p className="text-xs tracking-[0.18em] text-teak uppercase">FF&E · kit L + roof</p>
-            <p className="mt-2 font-display text-2xl text-ink">
-              {usd(ffeFor(SPIRAL_STYLE))} installed
-            </p>
-            <ul className="mt-4 space-y-3">
-              {kit.map((g) => (
-                <li key={g.id} className="flex justify-between gap-3 text-sm">
-                  <span className="text-muted">{g.title}</span>
-                  <span className="tabular-nums text-ink">{usd(groupTotal(g))}</span>
-                </li>
-              ))}
-              <li className="flex justify-between gap-3 text-sm">
-                <span className="text-muted">Roof-deck Adirondacks + planters</span>
-                <span className="tabular-nums text-ink">{usd(SPIRAL_ROOF_FFE)}</span>
-              </li>
-              <li className="flex justify-between gap-3 text-sm">
-                <span className="text-muted">Fully furnished / install</span>
-                <span className="tabular-nums text-ink">{usd(PRICE.ffeFurnished)}</span>
-              </li>
-            </ul>
-          </aside>
-        </div>
+        <LiveBoq initial={SPIRAL_STYLE} />
       </div>
     </section>
   );

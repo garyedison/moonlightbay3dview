@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 
 const LINKS: { href: string; label: string; external?: boolean }[] = [
   { href: "/lot-115", label: "Lot 115 look" },
+  { href: "/lot-115#boq", label: "Build price" },
   { href: "#quote", label: "Lots 115 / 127" },
   { href: "#palette", label: "Palette" },
   { href: "#rooms", label: "Rooms" },
