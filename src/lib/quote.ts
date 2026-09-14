@@ -65,12 +65,15 @@ export const SITEWORK = {
 /** Official assembly: $280 / 10-hour day. Hip roof matches 54 m² sheet (80 h / 8 days). Compact matches 43.9 m² sheet (63 h). Two-story scaled 1.5× for stack. */
 export const LABOR_DAY = 280;
 
-/** Site numbers. Shell includes internal profit; do not label the markup on the customer BOQ. */
+/** Site numbers. Shell and labor include internal profit; do not label the markup on the customer BOQ. */
 export const PRICE = {
   slabMep: 35000,
   contingency: 20000,
   ffeFurnished: 30000,
   shellUplift: 1.5,
+  /** Belizean crew is slower — bill assembly at 1.5× the $280 factory day rate. */
+  laborUplift: 1.5,
+  laborDayBilled: 420,
 };
 
 function living(): FfeLine[] {
@@ -384,7 +387,7 @@ export function shellSubtotal(s: QuoteStyle) {
 }
 
 export function laborFor(s: QuoteStyle) {
-  return s.laborCost;
+  return Math.round(s.laborCost * PRICE.laborUplift);
 }
 
 export function ffeFor(s: QuoteStyle) {
