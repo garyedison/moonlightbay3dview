@@ -52,7 +52,7 @@ export function MapStudio() {
           </Link>
           <nav className="flex flex-wrap gap-2">
             <Button asChild size="sm" variant="outline">
-              <Link to="/3d">Room films</Link>
+              <Link to="/3d">3D walk</Link>
             </Button>
             <Button type="button" size="sm" onClick={downloadCommunityPdf}>
               <Download className="size-4" />

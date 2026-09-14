@@ -130,7 +130,7 @@ export function buildInterior(lot: Lot, floor: 1 | 2): InteriorBuilt {
       g.add(plate);
       addFurniture(g, room);
       addPartitions(g, room, shellW, shellD);
-      addPhotoWall(g, room, photoForRoom(room.id, arch.id, lot.zone));
+      addPhotoWall(g, room, photoForRoom(room.id, arch.id, lot.zone, lot.n));
     }
 
     const dot = new THREE.Mesh(

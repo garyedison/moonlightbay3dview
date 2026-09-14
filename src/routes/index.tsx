@@ -4,6 +4,7 @@ import { Hero } from "@/components/Hero";
 import { TourReel } from "@/components/TourReel";
 import { RoomFilms } from "@/components/RoomFilms";
 import { QuoteStudio } from "@/components/QuoteStudio";
+import { SpiralCompare } from "@/components/SpiralCompare";
 import { Palette } from "@/components/Palette";
 import { RoomStudio } from "@/components/RoomStudio";
 import { FloorPlan } from "@/components/FloorPlan";
@@ -27,6 +28,7 @@ function Home() {
         <TourReel />
         <RoomFilms />
         <QuoteStudio />
+        <SpiralCompare />
         <Palette />
         <RoomStudio />
         <FloorPlan />

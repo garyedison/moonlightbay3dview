@@ -35,11 +35,11 @@ export function panoKeyFor(roomId: string, zone: Zone, archId: string): PanoKey 
   if (roomId === "deck") return zone === "beach" ? "deck-beach" : "deck-canal";
   if (roomId === "kitchen") return "kitchen";
   if (roomId === "dining") return "dining";
-  if (roomId === "bath") return "bath";
+  if (roomId === "bath" || roomId === "bath2") return "bath";
   if (roomId === "bed1") return "bed1";
   if (roomId === "bed2" || roomId === "bed3") return "bed2";
   if (roomId === "stair") return "stair";
-  if (roomId === "balcony") return "balcony";
+  if (roomId === "balcony" || roomId === "roof") return "balcony";
   if (roomId === "living" || roomId === "studio") {
     if (archId === "wood-small" || archId === "wood-studio" || archId === "steel-cube") return "cottage";
     return "living";
@@ -62,16 +62,17 @@ function virtual(id: string, name: string, pano: PanoKey, thumb: string): PanoRo
   };
 }
 
-export function panoRooms(archId: string, zone: Zone): PanoRoom[] {
+export function panoRooms(archId: string, zone: Zone, lotN?: number): PanoRoom[] {
+  const spiral = lotN === 115 || archId === "steel-spiral";
   const ext: PanoKey = zone === "beach" ? "ext-beach" : zone === "gate" ? "ext-gate" : "ext-canal";
   const deck: PanoKey = zone === "beach" ? "deck-beach" : "deck-canal";
   const out: PanoRoom[] = [
-    virtual("kitchen", "Kitchen", "kitchen", "/villa/kitchen.jpg"),
-    virtual("living", "Living", panoKeyFor("living", zone, archId), "/villa/living.jpg"),
-    virtual("deck", zone === "beach" ? "Beach terrace" : "Canal deck", deck, `/pano/${deck}/pz.jpg`),
-    virtual("outside", "Outside 360", ext, `/pano/${ext}/pz.jpg`),
+    virtual("kitchen", "Kitchen", "kitchen", spiral ? "/quote/spiral/kitchen.jpg" : "/villa/kitchen.jpg"),
+    virtual("living", "Living", panoKeyFor("living", zone, archId), spiral ? "/quote/spiral/living.jpg" : "/villa/living.jpg"),
+    virtual("deck", zone === "beach" ? "Beach terrace" : "Canal deck", deck, spiral ? "/quote/spiral/deck.jpg" : `/pano/${deck}/pz.jpg`),
+    virtual("outside", "Outside 360", ext, spiral ? "/quote/spiral/exterior.jpg" : `/pano/${ext}/pz.jpg`),
   ];
-  const tour = tourFor(archId, zone);
+  const tour = tourFor(archId, zone, lotN);
   const seen = new Set(out.map((r) => r.id));
   for (const t of tour) {
     if (seen.has(t.id)) continue;

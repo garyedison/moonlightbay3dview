@@ -32,6 +32,14 @@ export function QuoteStudio() {
           lot. The shell is unfurnished; furnishings, the mosquito-screened porch, fence, and
           assembly labor are priced below.
         </p>
+        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-ink">
+          A customer asked for a cedar spiral-deck container on Lot 115 instead of the hip-roof.
+          That look is quoted separately —{" "}
+          <a href="/lot-115" className="underline underline-offset-2">
+            Lot 115 customer look, side by side
+          </a>
+          .
+        </p>
 
         <div className="mt-8 overflow-hidden rounded-xl bg-ink">
           <button type="button" className="block w-full text-left" onClick={() => openLightbox("/quote/lots-115-127.jpg")}>

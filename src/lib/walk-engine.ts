@@ -274,7 +274,7 @@ export function mountWalk(canvas: HTMLCanvasElement): WalkApi {
 		insideLot = n;
 		floor = 1;
 		mode = "inside";
-		interiorRooms = panoRooms(lot.arch, lot.zone);
+		interiorRooms = panoRooms(lot.arch, lot.zone, lot.n);
 		activeRoom = (interiorRooms.find((r) => r.id === "kitchen") ?? interiorRooms.find((r) => r.id === "living") ?? interiorRooms[0])?.id ?? "kitchen";
 		const key = panoKeyFor(activeRoom, lot.zone, lot.arch);
 		pos.set(lot.x, 1.65, lot.z);

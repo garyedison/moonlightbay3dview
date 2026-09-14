@@ -5,6 +5,7 @@ import type { SiteId } from "@/lib/villa";
 import { cn } from "@/lib/utils";
 
 const LINKS: { href: string; label: string; external?: boolean }[] = [
+  { href: "/lot-115", label: "Lot 115 look" },
   { href: "#quote", label: "Lots 115 / 127" },
   { href: "#palette", label: "Palette" },
   { href: "#rooms", label: "Rooms" },
@@ -13,6 +14,7 @@ const LINKS: { href: string; label: string; external?: boolean }[] = [
   { href: "#gate", label: "Gate" },
   { href: "#value", label: "Canal value" },
   { href: "/map", label: "Plat" },
+  { href: "/3d", label: "3D walk" },
   { href: "#films", label: "Room films" },
   { href: "#tour", label: "Island video" },
   { href: "/site-map.html", label: "July 2026", external: true },

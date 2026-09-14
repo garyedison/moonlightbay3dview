@@ -87,6 +87,66 @@ const STAIR: TourRoom = {
   caption: "Oiled teak stair between the two container levels.",
 };
 
+const SPIRAL_LIVING: TourRoom = {
+  id: "living",
+  name: "Living",
+  image: "/quote/spiral/living.jpg",
+  caption: "Sand linen sofa facing the sliders. Canal light, same Caribbean Salt kit.",
+};
+const SPIRAL_KITCHEN: TourRoom = {
+  id: "kitchen",
+  name: "Kitchen",
+  image: "/quote/spiral/kitchen.jpg",
+  caption: "Teak millwork, limestone, sea-glass tile — factory wet pack.",
+};
+const SPIRAL_BED1: TourRoom = {
+  id: "bed1",
+  name: "Primary · up",
+  image: "/quote/spiral/bed1.jpg",
+  caption: "Upstairs primary. Ivory linen, rattan headboard, balcony to the canal.",
+};
+const SPIRAL_BED2: TourRoom = {
+  id: "bed2",
+  name: "Bedroom 2 · down",
+  image: "/quote/spiral/bed2.jpg",
+  caption: "Downstairs guest. Same furniture family as the primary.",
+};
+const SPIRAL_BATH: TourRoom = {
+  id: "bath",
+  name: "Bath 1 · down",
+  image: "/quote/spiral/bath.jpg",
+  caption: "Honed limestone and teak. Downstairs wet room.",
+};
+const SPIRAL_BATH2: TourRoom = {
+  id: "bath2",
+  name: "Bath 2 · up",
+  image: "/quote/spiral/bath2.jpg",
+  caption: "Same wet pack upstairs, window to the palms.",
+};
+const SPIRAL_DECK: TourRoom = {
+  id: "deck",
+  name: "400 sf deck",
+  image: "/quote/spiral/deck.jpg",
+  caption: "Open teak platform on the canal bank. House on dry land.",
+};
+const SPIRAL_ROOF: TourRoom = {
+  id: "roof",
+  name: "Roof deck",
+  image: "/quote/spiral/roof.jpg",
+  caption: "Cable-rail roof deck over the living room. Two Adirondack chairs.",
+};
+
+export const SPIRAL_TOUR_ROOMS: TourRoom[] = [
+  SPIRAL_LIVING,
+  SPIRAL_KITCHEN,
+  SPIRAL_BED1,
+  SPIRAL_BED2,
+  SPIRAL_BATH,
+  SPIRAL_BATH2,
+  SPIRAL_DECK,
+  SPIRAL_ROOF,
+];
+
 const BY_ARCH: Record<string, TourRoom[]> = {
   "steel-villa": [LIVING, KITCHEN, PRIMARY_CANAL, GUEST, BATH, BALCONY, STAIR, DECK_CANAL],
   "steel-linear": [LIVING, KITCHEN, PRIMARY_CANAL, BATH, DECK_CANAL],
@@ -96,6 +156,7 @@ const BY_ARCH: Record<string, TourRoom[]> = {
   "wood-park": [LIVING, KITCHEN, PRIMARY_CANAL, GUEST, BATH],
   "wood-small": [COTTAGE_LIVE, KITCHEN, PRIMARY_CANAL, BATH],
   "wood-studio": [COTTAGE_LIVE, BATH, DECK_CANAL],
+  "steel-spiral": SPIRAL_TOUR_ROOMS,
 };
 
 const EXTERIOR_BY_ARCH: Record<string, string> = {
@@ -107,6 +168,7 @@ const EXTERIOR_BY_ARCH: Record<string, string> = {
   "wood-park": "/cottage/nb-234.jpg",
   "wood-small": "/cottage/e1.jpg",
   "wood-studio": "/cottage/e7.jpg",
+  "steel-spiral": "/quote/spiral/exterior.jpg",
 };
 
 /** Unique exterior stills for ~30% of lots (featured + cycled cottage/villa shots). */
@@ -131,6 +193,7 @@ const EXTERIOR_BY_LOT: Record<number, string> = {
   112: "/cottage/c-e5.jpg",
   113: "/cottage/c-e6.jpg",
   114: "/cottage/c-e7.jpg",
+  115: "/quote/spiral/exterior.jpg",
   207: "/villa/canal-hero.jpg",
   208: "/villa/canal-dusk.jpg",
   209: "/cottage/canal-true.jpg",
@@ -180,7 +243,8 @@ const COTTAGE_CYCLE = [
   "/villa/canal-hero.jpg",
 ];
 
-export function tourFor(archId: string, zone: Zone): TourRoom[] {
+export function tourFor(archId: string, zone: Zone, lotN?: number): TourRoom[] {
+  if (lotN === 115 || archId === "steel-spiral") return SPIRAL_TOUR_ROOMS;
   const base = BY_ARCH[archId] ?? [LIVING, KITCHEN, PRIMARY_CANAL, BATH];
   if (zone === "beach") {
     return base.map((r) => {
@@ -204,10 +268,11 @@ export function hasUniqueExterior(lotN: number) {
 }
 
 
-export function photoForRoom(roomId: string, archId: string, zone: Zone): string {
-  const tour = tourFor(archId, zone);
+export function photoForRoom(roomId: string, archId: string, zone: Zone, lotN?: number): string {
+  const tour = tourFor(archId, zone, lotN);
   const hit = tour.find((t) => t.id === roomId);
   if (roomId === "outside" || roomId === "ext") {
+    if (lotN === 115 || archId === "steel-spiral") return "/quote/spiral/exterior.jpg";
     if (zone === "beach") return "/cottage/nb-196.jpg";
     if (zone === "gate") return "/cottage/e1.jpg";
     return "/cottage/nb-103.jpg";
@@ -220,7 +285,7 @@ export function photoForRoom(roomId: string, archId: string, zone: Zone): string
   return zone === "beach" ? LIVING_BEACH.image : LIVING.image;
 }
 
-export function tourRoom(roomId: string, archId: string, zone: Zone): TourRoom | undefined {
-  return tourFor(archId, zone).find((t) => t.id === roomId);
+export function tourRoom(roomId: string, archId: string, zone: Zone, lotN?: number): TourRoom | undefined {
+  return tourFor(archId, zone, lotN).find((t) => t.id === roomId);
 }
 

@@ -212,14 +212,14 @@ export function WalkStudio() {
                     {arch.kind === "steel" ? "Container steel" : "Wood"} · {arch.size} · {arch.beds} · {arch.area}
                   </p>
                   {(() => {
-                    const tour = tourFor(arch.id, lot.zone);
+                    const tour = tourFor(arch.id, lot.zone, lot.n);
                     const shown =
                       mode === "inside"
-                        ? photoForRoom(activeRoom ?? "living", arch.id, lot.zone)
+                        ? photoForRoom(activeRoom ?? "living", arch.id, lot.zone, lot.n)
                         : exteriorFor(lot.n, arch.id);
                     const cap =
                       mode === "inside"
-                        ? (tourRoom(activeRoom ?? "living", arch.id, lot.zone)?.caption ??
+                        ? (tourRoom(activeRoom ?? "living", arch.id, lot.zone, lot.n)?.caption ??
                           "Same Caribbean Salt furniture kit in every house.")
                         : lot.zone === "canal"
                           ? "On dry land. Deck faces the west canal — 5 ft bank down to the water."
@@ -264,6 +264,9 @@ export function WalkStudio() {
                     <Button type="button" size="sm" variant="outline" className="min-h-11" onClick={() => jump(103, false)}>
                       Canal 103
                     </Button>
+                    <Button type="button" size="sm" variant="outline" className="min-h-11" onClick={() => jump(115, false)}>
+                      Lot 115
+                    </Button>
                     <Button type="button" size="sm" variant="outline" className="min-h-11" onClick={() => jump(196, false)}>
                       Beach 196
                     </Button>
@@ -298,7 +301,7 @@ export function WalkStudio() {
                   )}
                   {mode === "inside" && lot && arch && (
                     <div className="mt-3 flex gap-2 overflow-x-auto pb-1">
-                      {(rooms.length ? rooms : tourFor(arch.id, lot.zone)).map((r) => (
+                      {(rooms.length ? rooms : tourFor(arch.id, lot.zone, lot.n)).map((r) => (
                         <button
                           key={r.id}
                           type="button"
@@ -309,7 +312,7 @@ export function WalkStudio() {
                           onClick={() => apiRef.current?.goRoom(r.id)}
                         >
                           <img
-                            src={photoForRoom(r.id, arch.id, lot.zone)}
+                            src={photoForRoom(r.id, arch.id, lot.zone, lot.n)}
                             alt=""
                             className="h-12 w-full rounded-t-lg object-cover"
                           />

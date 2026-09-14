@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as R3dRouteImport } from './routes/3d'
+import { Route as Lot115RouteImport } from './routes/lot-115'
 import { Route as MapRouteImport } from './routes/map'
 import { Route as Moonlightbay3dviewRouteImport } from './routes/moonlightbay3dview'
 import { Route as WalkRouteImport } from './routes/walk'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const R3dRoute = R3dRouteImport.update({
   id: '/3d',
   path: '/3d',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const Lot115Route = Lot115RouteImport.update({
+  id: '/lot-115',
+  path: '/lot-115',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MapRoute = MapRouteImport.update({
@@ -44,6 +50,7 @@ const WalkRoute = WalkRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/3d': typeof R3dRoute
+  '/lot-115': typeof Lot115Route
   '/map': typeof MapRoute
   '/moonlightbay3dview': typeof Moonlightbay3dviewRoute
   '/walk': typeof WalkRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/3d': typeof R3dRoute
+  '/lot-115': typeof Lot115Route
   '/map': typeof MapRoute
   '/moonlightbay3dview': typeof Moonlightbay3dviewRoute
   '/walk': typeof WalkRoute
@@ -59,21 +67,30 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/3d': typeof R3dRoute
+  '/lot-115': typeof Lot115Route
   '/map': typeof MapRoute
   '/moonlightbay3dview': typeof Moonlightbay3dviewRoute
   '/walk': typeof WalkRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/3d' | '/map' | '/moonlightbay3dview' | '/walk'
+  fullPaths: '/' | '/3d' | '/lot-115' | '/map' | '/moonlightbay3dview' | '/walk'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/3d' | '/map' | '/moonlightbay3dview' | '/walk'
-  id: '__root__' | '/' | '/3d' | '/map' | '/moonlightbay3dview' | '/walk'
+  to: '/' | '/3d' | '/lot-115' | '/map' | '/moonlightbay3dview' | '/walk'
+  id:
+    | '__root__'
+    | '/'
+    | '/3d'
+    | '/lot-115'
+    | '/map'
+    | '/moonlightbay3dview'
+    | '/walk'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   R3dRoute: typeof R3dRoute
+  Lot115Route: typeof Lot115Route
   MapRoute: typeof MapRoute
   Moonlightbay3dviewRoute: typeof Moonlightbay3dviewRoute
   WalkRoute: typeof WalkRoute
@@ -93,6 +110,13 @@ declare module '@tanstack/react-router' {
       path: '/3d'
       fullPath: '/3d'
       preLoaderRoute: typeof R3dRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lot-115': {
+      id: '/lot-115'
+      path: '/lot-115'
+      fullPath: '/lot-115'
+      preLoaderRoute: typeof Lot115RouteImport
       parentRoute: typeof rootRouteImport
     }
     '/map': {
@@ -122,6 +146,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   R3dRoute: R3dRoute,
+  Lot115Route: Lot115Route,
   MapRoute: MapRoute,
   Moonlightbay3dviewRoute: Moonlightbay3dviewRoute,
   WalkRoute: WalkRoute,

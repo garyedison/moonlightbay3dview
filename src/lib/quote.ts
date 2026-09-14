@@ -32,6 +32,9 @@ export type QuoteStyle = {
   laborHours: number;
   laborDays: number;
   laborCost: number;
+  sitework?: number;
+  extraFfe?: number;
+  deckNote?: string;
 };
 
 export const QUOTE = {
@@ -61,6 +64,16 @@ export const SITEWORK = {
   rail: RAIL,
   fence: FENCE,
 };
+
+/** Lot 115 customer look: open 400 sf teak + roof deck + cable rail + fence. No mosquito screen. */
+export const SPIRAL_SITE = {
+  deck: 14000,
+  roof: 8500,
+  rail: 4800,
+  fence: 7200,
+};
+export const SPIRAL_SITE_TOTAL = 34500;
+export const SPIRAL_ROOF_FFE = 750;
 
 /** Official assembly: $280 / 10-hour day. Hip roof matches 54 m² sheet (80 h / 8 days). Compact matches 43.9 m² sheet (63 h). Two-story scaled 1.5× for stack. */
 export const LABOR_DAY = 280;
@@ -186,6 +199,17 @@ const oneBrRooms = [
   { id: "kitchen", name: "Kitchen", image: "/villa/kitchen.jpg", caption: "Same teak galley SKU, scaled." },
   { id: "bath", name: "Bath", image: "/villa/bath.jpg", caption: "One wet room, limestone and teak." },
   { id: "deck", name: "Screened deck", image: "/quote/screened-deck.jpg", caption: "The 400 sf screened porch is the evening room." },
+];
+
+const spiralRooms = [
+  { id: "living", name: "Living", image: "/quote/spiral/living.jpg", caption: "Sand linen sofa facing the sliders. Canal light, same Caribbean Salt kit." },
+  { id: "kitchen", name: "Kitchen", image: "/quote/spiral/kitchen.jpg", caption: "Teak millwork, limestone, sea-glass tile — factory wet pack." },
+  { id: "bed1", name: "Primary · up", image: "/quote/spiral/bed1.jpg", caption: "Upstairs primary. Ivory linen, rattan headboard, balcony to the canal." },
+  { id: "bed2", name: "Bedroom 2 · down", image: "/quote/spiral/bed2.jpg", caption: "Downstairs guest. Same furniture family as the primary." },
+  { id: "bath", name: "Bath 1 · down", image: "/quote/spiral/bath.jpg", caption: "Honed limestone and teak. Downstairs wet pack." },
+  { id: "bath2", name: "Bath 2 · up", image: "/quote/spiral/bath2.jpg", caption: "Same wet pack upstairs, window to the palms." },
+  { id: "deck", name: "400 sf deck", image: "/quote/spiral/deck.jpg", caption: "Open teak platform on the canal bank. No mosquito screen." },
+  { id: "roof", name: "Roof deck", image: "/quote/spiral/roof.jpg", caption: "Cable-rail roof deck over the living room. Two Adirondack chairs." },
 ];
 
 export const STYLES: QuoteStyle[] = [
@@ -371,12 +395,46 @@ export const STYLES: QuoteStyle[] = [
     },
     rooms: oneBrRooms,
   },
+  {
+    id: "cs-spiral",
+    sku: "CS-SPIRAL",
+    name: "Spiral-deck container",
+    beds: "2BR / 2BA",
+    area: "71 m² / 768 sf enclosed",
+    story: "Two-story",
+    look: "Cedar-clad container, roof deck, spiral stair",
+    ship: "1.5 / 40HQ",
+    factory: 32000,
+    freight: 15000,
+    inland: 5000,
+    slab: 22000,
+    tie: 2500,
+    crane: 3500,
+    kit: "L",
+    laborHours: 130,
+    laborDays: 13,
+    laborCost: 3640,
+    sitework: SPIRAL_SITE_TOTAL,
+    extraFfe: SPIRAL_ROOF_FFE,
+    deckNote:
+      "400 sf open teak deck plus 256 sf cable-rail roof deck. No mosquito screen — matches the customer look.",
+    exterior: {
+      image: "/quote/spiral/exterior.jpg",
+      title: "Spiral-deck container",
+      note: "Cedar lap over steel, rust container end, black spiral stair, 400 sf open teak deck on the canal bank.",
+    },
+    rooms: spiralRooms,
+  },
 ];
 
-/** Three styles shown to customers — names only, no supplier codes. */
+/** Three styles shown on the pair quote — names only, no supplier codes. */
 export const CUSTOMER_STYLES = STYLES.filter((s) =>
   ["pt211222", "pt200009", "pt220348-2"].includes(s.id),
 );
+
+export const SPIRAL_STYLE = STYLES.find((s) => s.id === "cs-spiral")!;
+
+export const HIP_STYLE = STYLES.find((s) => s.id === "pt211222")!;
 
 export function factoryOnSite(s: QuoteStyle) {
   return Math.round(s.factory * PRICE.shellUplift);
@@ -390,12 +448,16 @@ export function laborFor(s: QuoteStyle) {
   return Math.round(s.laborCost * PRICE.laborUplift);
 }
 
+export function siteworkFor(s: QuoteStyle) {
+  return s.sitework ?? SITEWORK.exterior;
+}
+
 export function ffeFor(s: QuoteStyle) {
-  return kitTotal(s.kit) + PRICE.ffeFurnished;
+  return kitTotal(s.kit) + PRICE.ffeFurnished + (s.extraFfe ?? 0);
 }
 
 export function allInOne(s: QuoteStyle) {
-  return shellSubtotal(s) + PRICE.contingency + SITEWORK.exterior + laborFor(s) + ffeFor(s);
+  return shellSubtotal(s) + PRICE.contingency + siteworkFor(s) + laborFor(s) + ffeFor(s);
 }
 
 export function pairTotal(s: QuoteStyle) {

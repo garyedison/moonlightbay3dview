@@ -34,7 +34,7 @@ export function TourReel() {
           href="/3d"
           className="inline-flex min-h-11 items-center justify-center rounded-full px-5 text-sm text-ink shadow-[0_0_0_1px_rgba(28,33,31,0.16)]"
         >
-          Room films
+          3D walk
         </a>
       </div>
     </section>

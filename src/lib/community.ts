@@ -75,6 +75,15 @@ const STEEL_CUBE_PLAN: PlanRoom[] = [
   { id: "bed1", name: "Loft bed", x: 0, z: 0, w: 3.0, d: 4.0, floor: 2, kind: "bed" },
 ];
 
+const STEEL_SPIRAL_PLAN: PlanRoom[] = [
+  { id: "living", name: "Living", x: 0, z: 2.2, w: 4.2, d: 4.2, floor: 1, kind: "live" },
+  { id: "kitchen", name: "Kitchen", x: 1.2, z: 0.4, w: 2.4, d: 2.6, floor: 1, kind: "kitchen" },
+  { id: "bath", name: "Bath 1", x: -1.4, z: -2.4, w: 1.6, d: 2.2, floor: 1, kind: "bath" },
+  { id: "bed2", name: "Bedroom 2", x: 1.0, z: -2.6, w: 2.6, d: 3.2, floor: 1, kind: "bed" },
+  { id: "bed1", name: "Primary", x: 0, z: -1.6, w: 3.6, d: 3.8, floor: 2, kind: "bed" },
+  { id: "bath2", name: "Bath 2", x: 0, z: 1.8, w: 3.4, d: 2.0, floor: 2, kind: "bath" },
+];
+
 const WOOD_BAY_PLAN: PlanRoom[] = [
   { id: "living", name: "Living", x: 0, z: 2.6, w: 5.0, d: 4.6, floor: 1, kind: "live" },
   { id: "kitchen", name: "Kitchen", x: 1.3, z: -0.8, w: 2.4, d: 2.2, floor: 1, kind: "kitchen" },
@@ -150,6 +159,20 @@ export const ARCH: Record<string, Archetype> = {
     stories: 2,
     rooms: STEEL_CUBE_PLAN.filter((r) => r.floor === 1).map(({ id, name }) => ({ id, name })),
     plan: STEEL_CUBE_PLAN,
+  },
+  "steel-spiral": {
+    id: "steel-spiral",
+    kind: "steel",
+    name: "Spiral-deck container",
+    size: "16 × 32 ft",
+    beds: "2 bed / 2 bath",
+    area: "768 sf",
+    w: 4.4,
+    d: 8.4,
+    h: 5.6,
+    stories: 2,
+    rooms: STEEL_SPIRAL_PLAN.filter((r) => r.floor === 1).map(({ id, name }) => ({ id, name })),
+    plan: STEEL_SPIRAL_PLAN,
   },
   "wood-bay": {
     id: "wood-bay",
@@ -340,6 +363,7 @@ const FEATURED: Record<number, { c: number; r: number; zone: Zone; rot: number; 
   112: { c: 3, r: 12, zone: "canal", rot: -Math.PI / 2, arch: "wood-small" },
   113: { c: 3, r: 13, zone: "canal", rot: -Math.PI / 2, arch: "wood-studio" },
   114: { c: 3, r: 14, zone: "canal", rot: -Math.PI / 2, arch: "steel-linear" },
+  115: { c: 3, r: 15, zone: "canal", rot: -Math.PI / 2, arch: "steel-spiral" },
   330: { c: 4, r: 1, zone: "gate", rot: -Math.PI / 2, arch: "wood-small" },
   315: { c: 4, r: 2, zone: "gate", rot: -Math.PI / 2, arch: "steel-cube" },
   314: { c: 4, r: 3, zone: "gate", rot: -Math.PI / 2, arch: "wood-mid" },
